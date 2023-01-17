@@ -1393,7 +1393,7 @@ export default function Admin() {
   return (
     <div>
       <Head>
-        <title>Adventures | Time Traveling Chimps Club</title>
+        <title>Adventures Panel | TTCC</title>
         <link rel="shortcut icon" type="image/png" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="192x192" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="512x512" href="/favicon.ico" />

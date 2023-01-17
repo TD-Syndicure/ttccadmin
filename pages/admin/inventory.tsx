@@ -416,30 +416,14 @@ export default function Admin() {
   return (
     <>
       <Head>
-        <title>Admin Panel | TTCC </title>
+        <title>Inventory Panel | TTCC </title>
         <link rel="shortcut icon" type="image/png" href="/logo.png" />
         <link rel="apple-touch-icon" sizes="192x192" href="/logo.png" />
         <link rel="apple-touch-icon" sizes="512x512" href="/logo.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <meta name="fortmatic-site-verification" content="j93LgcVZk79qcgyo" />
-        <meta property="og:url" content="/" />
-        <meta property="og:title" content="Inventory | FAPE" />
-        <meta
-          property="og:description"
-          content="Community managed derug | 100% Royalties to the DAO | Non-Derivative art | Nostalgic traits"
-        />
-        <meta property="og:image" content="/banner.png" />
-        <meta
-          name="twitter:title"
-          content="Adventures | Time Traveling Chimps Club"
-        />
-        <meta
-          name="twitter:description"
-          content="Community managed derug | 100% Royalties to the DAO | Non-Derivative art | Nostalgic traits"
-        />
-        <meta name="twitter:image" content="/banner.png" />
-        <meta name="twitter:card" content="summary_large_image" />
+  
       </Head>
       <div className="container">
         <div className="mainScreen">

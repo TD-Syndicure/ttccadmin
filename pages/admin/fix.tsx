@@ -436,27 +436,13 @@ export default function Admin() {
   return (
     <>
       <Head>
-        <title>Admin | FAPE </title>
+        <title>Fix Chimp | FAPE </title>
         <link rel="shortcut icon" type="image/png" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="192x192" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="512x512" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <meta name="fortmatic-site-verification" content="j93LgcVZk79qcgyo" />
-        <meta property="og:url" content="/" />
-        <meta property="og:title" content="Admin | FAPE" />
-        <meta
-          property="og:description"
-          content="Fractured Apes NFT - Solana's home of premier art and gaming culture."
-        />
-        <meta property="og:image" content="/logo.png" />
-        <meta name="twitter:title" content="Admin | FAPE" />
-        <meta
-          name="twitter:description"
-          content="Fractured Apes NFT - Solana's home of premier art and gaming culture."
-        />
-        <meta name="twitter:image" content="/logo.png" />
-        <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <div className="container">
         <div className="mainScreen">
