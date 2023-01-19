@@ -55,7 +55,7 @@ export default async function handler(req, res) {
   );
 
   const storeKeyPair = anchor.web3.Keypair.fromSecretKey(
-    bs58.decode(process.env.TRAITS_ENCRYPT)
+    bs58.decode(process.env.TRAITS_STORE_ENCRYPT)
   );
 
   const endpoint =

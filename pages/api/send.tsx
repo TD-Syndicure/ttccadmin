@@ -49,7 +49,7 @@ export default async function handler(req: any, res: any) {
 
     const requestData = JSON.parse(req.body)
     const user = new PublicKey(requestData.publicKey)
-    const devkeyPair = Keypair.fromSecretKey(bs58.decode(process.env.TRAITS_ENCRYPT!))
+    const devkeyPair = Keypair.fromSecretKey(bs58.decode(process.env.TRAITS_STORE_ENCRYPT!))
 
     const possibleTrait = requestData.nft
 
