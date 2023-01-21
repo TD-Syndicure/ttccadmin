@@ -1444,7 +1444,7 @@ export default function Admin() {
           </div>
         </div>
 
-        {authenticatedUser ? (
+        {authenticatedUsers ? (
           <div className="adminScreen">
             <RenderContent />
           </div>

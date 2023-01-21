@@ -78,12 +78,12 @@ const Landing: NextPage = () => {
             </li>
             <li className="ml-3">
               <Link href="/admin/fix">
-                <button className="adminPanel button">CHIMP FIX</button>
+                <button className="menu-bar-link">CHIMP FIX</button>
               </Link>
             </li>
             <li className="ml-3">
               <Link href="/admin/adventures">
-                <button className="adminPanel button">ADVENTURE CONTROL</button>
+                <button className="menu-bar-link">ADVENTURE CONTROL</button>
               </Link>
             </li>
           </div>

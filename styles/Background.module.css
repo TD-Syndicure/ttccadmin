@@ -1,81 +1,7 @@
-.landing {
-    background-image: url('https://imagedelivery.net/RT_RPMu352DnmQo9WAcrJw/08ddada6-540d-4a7b-4633-325deb88f300/desktoplarge');
-}
-
-.home {
-    background-image: url('https://imagedelivery.net/RT_RPMu352DnmQo9WAcrJw/9c3e120f-749e-4ccf-71af-694189916f00/desktoplarge');
-}
-
-.about {
-    /* background-image: url('https://imagedelivery.net/RT_RPMu352DnmQo9WAcrJw/e4906f69-0a3b-46c3-82ec-e6afc734d300/desktoplarge'); */
-    background-color: #f1e6d8;
-    height: 100vh !important;
-}
-
-.staking {
-    /* background-image: url('https://imagedelivery.net/RT_RPMu352DnmQo9WAcrJw/44b2c140-31e9-4597-7e69-2d0fe6e31200/desktoplarge'); */
-    background-color: #f1e6d8;
-    height: 100% !important;
-}
-
-.juicebar {
-    /* background-image: url('https://imagedelivery.net/RT_RPMu352DnmQo9WAcrJw/072ca815-7e92-4c56-21ed-5e655c213c00/desktoplarge'); */
-    background-color: #f1e6d8;
-    height: 100% !important;
-}
-
-.arcadeToken {
-    /* background-image: url('https://imagedelivery.net/RT_RPMu352DnmQo9WAcrJw/e464f9d6-324b-4ed5-11fb-10ec4fa4ff00/desktoplarge'); */
-    background-color: #f1e6d8;
-    height: 100% !important;
-}
-
-.market {
-    /* background-image: url('https://imagedelivery.net/RT_RPMu352DnmQo9WAcrJw/68e24322-3672-45ed-1ccf-ac522e7c2200/desktoplarge'); */
-    background-color: #f1e6d8;
-    height: 100% !important;
-}
-
 .gallery {
     /* background-image: url('https://imagedelivery.net/RT_RPMu352DnmQo9WAcrJw/801cff46-3cc9-4cd7-0f22-8e0812419400/desktoplarge'); */
-    background-color: #f1e6d8;
-    height: 100% !important;
+    background: url("/images/bg.png");
 }
-
-.factory {
-    /* background-image: url('https://imagedelivery.net/RT_RPMu352DnmQo9WAcrJw/db9b5453-3941-4236-445f-dd8d671f9200/desktoplarge'); */
-    background-color: #f1e6d8;
-    height: 100% !important;
-}
-
-.cyborgmint {
-    /* background-image: url('https://imagedelivery.net/RT_RPMu352DnmQo9WAcrJw/6fea91c0-2ffd-41ef-daec-e700cc9b1700/desktoplarge'); */
-    background-color: #f1e6d8;
-    height: 100% !important;
-}
-
-.comingsoon {
-    /* background-image: url('https://imagedelivery.net/RT_RPMu352DnmQo9WAcrJw/53beca8b-1e38-4fcc-13f1-cdd4d0201300/desktoplarge'); */
-    background-color: #f1e6d8;
-    height: 100% !important;
-}
-
-.blurImage {
-    /* background-image: url('https://imagedelivery.net/RT_RPMu352DnmQo9WAcrJw/2c9e333f-63c2-4005-9e89-4add33ba6a00/desktoplarge'); */
-    background-color: #f1e6d8;
-    height: 100% !important;
-}
-
-.crystal {
-    /* background-image: url('https://imagedelivery.net/RT_RPMu352DnmQo9WAcrJw/2f65bb46-bed5-4ed5-94a0-3f48821c3d00/desktoplarge'); */
-    background-color: #f1e6d8;
-    height: 100% !important;
-}
-
-.syndictower {
-    /* background-image: url("/images/shopbg.png"); */
-}
-
 
 .landing,
 .home,
@@ -93,36 +19,5 @@
     background-repeat: no-repeat;
     background-size:cover  !important;
     max-width: 100vw;
-    height: 100%;
-}
-
-@media only screen and (min-width: 375px) {
-    
-    .home {
-        background-position: 25%;
-    }
-
-    .about {
-        background-position: 50%;
-    }
-
-    .staking {
-        background-position: 50% 50%;
-        background-size: contain !important;
-    }
-
-    .arcadeToken{
-        background-position: 50% 50%;
-    }
-
-    .comingsoon{
-        background-position: 50% 50%;
-    }
-}
-
-@media only screen and (min-width: 768px) {
-    
-    .home {
-        background-position: 60%;
-    }
+    min-height: 100%;
 }

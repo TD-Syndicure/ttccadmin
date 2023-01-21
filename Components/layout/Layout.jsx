@@ -17,7 +17,7 @@ export default function Layout({ children }) {
 
  
   return (
-    <main className={styles.landing} style={{height: "100vh"}}>
+    <main className={styles.landing}>
       <div className="body z-[1200]">
         <main className="p-0 flex justify-center">{children}</main>
       </div>
