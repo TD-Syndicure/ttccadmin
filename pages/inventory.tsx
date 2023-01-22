@@ -448,11 +448,7 @@ export default function Admin() {
             </div>
           </div>
 
-          {!publicKey ? (
-            <div className="addTrait">
-              <WalletMultiButton />
-            </div>
-          ) : authorized.includes(publicKey.toBase58()) ? (
+          {authorized.includes(publicKey?.toBase58()) ? (
             <div className="addTrait">
               <AddTraitItems />
             </div>
