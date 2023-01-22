@@ -38,7 +38,7 @@ const Landing: NextPage = () => {
         <link rel="apple-touch-icon" sizes="192x192" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="512x512" href="/favicon.ico" />
       </Head>
-      <ul>
+      <ul className="h-[100vh]">
         <li className=" wallet-container flex ">
           <WalletMultiButton
             startIcon={null}

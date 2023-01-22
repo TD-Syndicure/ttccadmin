@@ -128,11 +128,6 @@
   }
 }
 
-.container {
-  min-height: 100vh;
-  background: rgba(55, 11, 135, 0.65);
-}
-
 .main {
   min-height: 100vh;
   display: flex;
