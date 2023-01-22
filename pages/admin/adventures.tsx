@@ -470,11 +470,12 @@ export default function Admin() {
               day(s)
             </h3>
             <h3>
-              LORE: <textarea onChange={(e) => setLore(e.target.value)} />
+              LORE: <textarea className="!text-black" onChange={(e) => setLore(e.target.value)} />
             </h3>
             <h3>
               Traits Rewards Hashlist:{" "}
               <textarea
+              className="!text-black"
                 style={{ minHeight: "150px" }}
                 value={traitsHashlist}
                 onChange={(e) => setTraitsHashlist(e.target.value)}
@@ -483,6 +484,7 @@ export default function Admin() {
             <h3>
               NFT Rewards Hashlist:{" "}
               <textarea
+              className="!text-black"
                 style={{ minHeight: "150px" }}
                 value={nftsHashlist}
                 onChange={(e) => setNFTsHashlist(e.target.value)}
