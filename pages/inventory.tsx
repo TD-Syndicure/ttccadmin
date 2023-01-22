@@ -423,13 +423,12 @@ export default function Admin() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <meta name="fortmatic-site-verification" content="j93LgcVZk79qcgyo" />
-  
       </Head>
       <div className="container">
         <div className="mainScreen">
           <div className="navbar">
             <div className="navButtons">
-              {publicKey ? (
+            {authorized.includes(publicKey?.toBase58()) ? (
                 <>
                   <button
                     className={
@@ -443,6 +442,8 @@ export default function Admin() {
                   </button>
                 </>
               ) : null}
+            </div>
+            <div className="addTrait">
               <WalletMultiButton />
             </div>
           </div>

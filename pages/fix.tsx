@@ -75,7 +75,7 @@ export default function Admin() {
     "3KcjzRD2gEZ8KcynWnvpo6njRPMjMzn4MPaeudTcYjuf",
     "| TTCCrCrX9RRGdEEjyvQwSvYWY9K7gmSXHuchfzhSa8L",
     "Hh3dehjrQ7gXiipcewCWnWZZHpW5rA9gwBs7Aosno3B5",
-    "5hopvnJPJpriQVmGuhEoAsAZVh9zK9LxSf7UjMnpPF9"
+    "5hopvnJPJpriQVmGuhEoAsAZVh9zK9LxSf7UjMnpPF9",
   ];
 
   const [newTrait, setNewTrait]: any = useState();
@@ -101,8 +101,6 @@ export default function Admin() {
     setFinishedMetadataObj(null);
     setLoadingNewNFT(false);
   };
-
-
 
   useEffect(() => {
     const renderUpdatedImage = async (type2: any) => {
@@ -448,7 +446,7 @@ export default function Admin() {
         <div className="mainScreen">
           <div className="navbar">
             <div className="navButtons">
-              {publicKey ? (
+            {authorized.includes(publicKey?.toBase58()) ? (
                 <>
                   <button
                     className={
@@ -462,6 +460,8 @@ export default function Admin() {
                   </button>
                 </>
               ) : null}
+            </div>
+            <div className="addTrait">
               <WalletMultiButton />
             </div>
           </div>
