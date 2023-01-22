@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { useState, useEffect } from "react";
-import { generateDownload } from "../../scripts/cropImage";
+import { generateDownload } from "../scripts/cropImage";
 import { useAlert } from "react-alert";
 import axios from "axios";
 import {
@@ -11,7 +11,7 @@ import {
   updateMetadata,
   adminUpdate,
   toDataURL,
-} from "../../scripts";
+} from "../scripts";
 //const Wallet = require('@project-serum/anchor')
 import * as anchor from "@project-serum/anchor";
 import {
@@ -43,7 +43,7 @@ import {
   userNFTsState,
   userTraitsState,
   videoPlayingState,
-} from "../../scripts/atoms";
+} from "../scripts/atoms";
 import { Router, useRouter } from "next/router";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,

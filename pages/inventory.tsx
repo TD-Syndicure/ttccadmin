@@ -3,12 +3,12 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { Router, useRouter } from "next/router";
 import { useAlert } from "react-alert";
 import { useRecoilState } from "recoil";
-import { storeItemsState } from "../../scripts/atoms";
+import { storeItemsState } from "../scripts/atoms";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BiImageAdd } from "react-icons/bi";
 import Head from "next/head";
-import { writeAPI } from "../../scripts";
+import { writeAPI } from "../scripts";
 import { programs } from "@metaplex/js";
 import { Connection } from "@solana/web3.js";
 const {

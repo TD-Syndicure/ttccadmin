@@ -4863,6 +4863,32 @@ h2 {
 
 /* ============================ ADMIN ============================ */
 
+.adminLogin button {
+  width: 400px;
+  max-width: 90vw;
+  padding: 10px;
+  border-radius: 10px;
+  border: 0;
+  background: #72FF80;
+}
+
+.adminLogin input {
+  width: 400px;
+  max-width: 90vw;
+  padding: 10px;
+  border-radius: 10px;
+  border: 0;
+}
+
+.adminLogin {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
 .editButton .addButton .deleteButton {
   color: blue !important;
 }

@@ -72,17 +72,17 @@ const Landing: NextPage = () => {
         ) : authorized.includes(publicKey.toBase58()) ? (
           <div className="adminPanel">
             <li className="ml-3">
-              <Link href="/admin/inventory">
+              <Link href="/inventory">
                 <button className="menu-bar-link">STORE INVENTORY</button>
               </Link>
             </li>
             <li className="ml-3">
-              <Link href="/admin/fix">
+              <Link href="/fix">
                 <button className="menu-bar-link">CHIMP FIX</button>
               </Link>
             </li>
             <li className="ml-3">
-              <Link href="/admin/adventures">
+              <Link href="/adventures">
                 <button className="menu-bar-link">ADVENTURE CONTROL</button>
               </Link>
             </li>

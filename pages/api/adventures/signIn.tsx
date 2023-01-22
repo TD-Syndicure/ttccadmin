@@ -11,7 +11,7 @@ const firebaseConfig = {
     appId: process.env.ADV_APP_ID,
 };
 
-const app = initializeApp(firebaseConfig, 'sixth');
+const app = initializeApp(firebaseConfig);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const auth = getAuth();
