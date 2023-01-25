@@ -443,28 +443,19 @@ export default function Admin() {
         <meta name="fortmatic-site-verification" content="j93LgcVZk79qcgyo" />
       </Head>
       <div className="container">
-        <div className="mainScreen">
-          <div className="navbar">
-            <div className="navButtons">
-            {authorized.includes(publicKey?.toBase58()) ? (
-                <>
-                  <button
-                    className={
-                      router.pathname === "/"
-                        ? "navButton activeNav"
-                        : "navButton inactiveNav"
-                    }
-                    onClick={() => router.push("/")}
-                  >
-                    Home
-                  </button>
-                </>
+        <div className={styles.main}>
+        <div className="navbar">
+        {publicKey ? (
+                <div className="mr-2">
+                    <div className="selectSession">
+                        <button onClick={() => router.push('/')} style={{ background: '#FFFFFF', color: '#B7B7B7' }} className="bigButtons">Back to Home</button>
+                    </div>
+                </div>
               ) : null}
-            </div>
-            <div className="addTrait">
-              <WalletMultiButton />
-            </div>
+          <div className="flex">
+            <WalletMultiButton />
           </div>
+        </div>
 
           <div className="adminPanel">
             {authorized.includes(publicKey?.toBase58()) ? (

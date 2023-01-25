@@ -2906,7 +2906,7 @@ textarea {
 }
 
 .adminScreen {
-  padding-top: 100px;
+  /* padding-top: 100px; */
   box-sizing: border-box;
   min-height: 100vh;
   width: 1400px;
@@ -3401,7 +3401,7 @@ button:disabled {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin: 50px 0;
+  /* margin: 50px 0; */
 }
 
 .adminPanel img {

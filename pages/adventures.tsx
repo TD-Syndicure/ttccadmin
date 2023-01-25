@@ -1428,16 +1428,9 @@ export default function Admin() {
         <div className="navbar">
         {publicKey ? (
                 <div className="mr-2">
-                  <button
-                    className={
-                      router.pathname === "/"
-                        ? "navButton activeNav"
-                        : "navButton inactiveNav"
-                    }
-                    onClick={() => router.push("/")}
-                  >
-                    Home
-                  </button>
+                    <div className="selectSession">
+                        <button onClick={() => router.push('/')} style={{ background: '#FFFFFF', color: '#B7B7B7' }} className="bigButtons">Back to Home</button>
+                    </div>
                 </div>
               ) : null}
           <div className="flex">

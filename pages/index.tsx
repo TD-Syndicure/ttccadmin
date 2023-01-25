@@ -54,6 +54,11 @@ const Landing: NextPage = () => {
                 <button className="menu-bar-link">ADVENTURE CONTROL</button>
               </Link>
             </li>
+            <li className="ml-3">
+              <Link href="/adventurefix">
+                <button className="menu-bar-link">MANUAL ADVENTURES</button>
+              </Link>
+            </li>
           </div>
       </ul>
     </>

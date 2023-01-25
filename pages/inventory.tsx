@@ -14,7 +14,7 @@ import { Connection } from "@solana/web3.js";
 const {
   metadata: { Metadata },
 } = programs;
-
+import styles from "../styles/Home.module.css";
 export default function Admin() {
   const { publicKey, signTransaction, sendTransaction } = useWallet();
   const connection = new Connection(
@@ -25,7 +25,7 @@ export default function Admin() {
   const router = useRouter();
 
   const [loading, setLoading]: any = useState(false);
-
+  const [authenticatedUser, setAuthenticatedUser]: any = useState(false);
   const [storeItems, setStoreItems] = useRecoilState(storeItemsState);
 
   const authorized = [
@@ -38,6 +38,52 @@ export default function Admin() {
     "Hh3dehjrQ7gXiipcewCWnWZZHpW5rA9gwBs7Aosno3B5",
     "5hopvnJPJpriQVmGuhEoAsAZVh9zK9LxSf7UjMnpPF9",
   ];
+
+  const Login = () => {
+    const [email, setEmail]: any = useState();
+    const [password, setPassword]: any = useState();
+
+    const signIn = async () => {
+      const requestData = {
+        method: "POST",
+        header: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email, password: password }),
+      };
+      var response = await fetch("./api/adventures/signIn", requestData);
+      const res = await response.json();
+      if (res === "success") {
+        alert.removeAll();
+        alert.success("Signed in!");
+        setAuthenticatedUser(true);
+      } else {
+        alert.removeAll();
+        alert.error("Not authorized!");
+        setAuthenticatedUser(false);
+      }
+    };
+
+    return (
+      <div className="adminLogin">
+        <input
+          type="email"
+          alt="Email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          alt="Password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button onClick={() => signIn()}>Log In</button>
+      </div>
+    );
+  };
 
   const AddTraitItems = () => {
     const IndivItem = ({ item, index }: { item: any; index: any }) => {
@@ -425,36 +471,34 @@ export default function Admin() {
         <meta name="fortmatic-site-verification" content="j93LgcVZk79qcgyo" />
       </Head>
       <div className="container">
-        <div className="mainScreen">
+        <div className={styles.main}>
           <div className="navbar">
-            <div className="navButtons">
-            {authorized.includes(publicKey?.toBase58()) ? (
-                <>
+            {publicKey ? (
+              <div className="mr-2">
+                <div className="selectSession">
                   <button
-                    className={
-                      router.pathname === "/"
-                        ? "navButton activeNav"
-                        : "navButton inactiveNav"
-                    }
                     onClick={() => router.push("/")}
+                    style={{ background: "#FFFFFF", color: "#B7B7B7" }}
+                    className="bigButtons"
                   >
-                    Home
+                    Back to Home
                   </button>
-                </>
-              ) : null}
-            </div>
-            <div className="addTrait">
+                </div>
+              </div>
+            ) : null}
+            <div className="flex">
               <WalletMultiButton />
             </div>
           </div>
 
-          {authorized.includes(publicKey?.toBase58()) ? (
-            <div className="addTrait">
+          {authenticatedUser ? (
+            <div className="adminScreen">
               <AddTraitItems />
             </div>
           ) : (
-            <div className="addTrait">
-              <h1 style={{ color: "#fff" }}>Not authorized</h1>
+            <div className="adminScreen">
+              <h1 className="notAuthorized">Not Authorized</h1>
+              <Login />
             </div>
           )}
         </div>
