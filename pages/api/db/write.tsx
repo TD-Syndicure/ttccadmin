@@ -116,7 +116,7 @@ export default async function handler(
     res.status(200).json({ info: "success" });
   } else if (requestedInfo === "updateTrait") {
     await updateDoc(doc(db1, "traits", extraInfo.item), {
-      costTreatz: +extraInfo.costTreatz,
+      costSol: +extraInfo.costSol,
       cost: +extraInfo.cost,
       quantity: extraInfo.quantity,
       metadata: extraInfo.metadata,
@@ -129,7 +129,7 @@ export default async function handler(
     res.status(200).json({ info: "success" });
   } else if (requestedInfo === "addTrait") {
     const newTraitDocID = await addDoc(collection(db1, "traits"), {
-      costTreatz: +extraInfo.costTreatz,
+      costSol: +extraInfo.costSol,
       cost: +extraInfo.cost,
       metadata: extraInfo.metadata,
       hashlist: extraInfo.hashlist,
