@@ -100,11 +100,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(200).json({ info: "success" });
     }
     else if (requestedInfo === "deleteTrait") {
-        await deleteDoc(doc(db, "traits", extraInfo))
+        await deleteDoc(doc(db1, "traits", extraInfo))
         res.status(200).json({ info: "success" });
     } 
     else if (requestedInfo === "addTrait") {
-        await addDoc(collection(db, "traits"), extraInfo)
+        await addDoc(collection(db1, "traits"), extraInfo)
         res.status(200).json({ info: "success" });
     } 
 
