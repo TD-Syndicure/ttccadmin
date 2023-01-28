@@ -567,10 +567,10 @@ export default function Admin() {
         const [edit, setEdit]: any = useState(false);
         const [name, setName]: any = useState(mission.id);
         const [chimpPercent, setChimpPercent]: any = useState(
-          mission.data.items.nft.chance * 100
+          mission.data.items.chimp.chance * 100
         );
         const [traitPercent, setTraitPercent]: any = useState(
-          mission.data.items.chimp.chance * 100
+          mission.data.items.nft.chance * 100
         );
         const [solPercent, setSolPercent]: any = useState(
           mission.data.items.sol.chance * 100
