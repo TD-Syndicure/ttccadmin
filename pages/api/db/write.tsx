@@ -56,57 +56,106 @@ export default async function handler(
 
   if (requestedInfo === "addMissionToDatabase") {
     await setDoc(doc(db, "admin", extraInfo.name), {
-      items: extraInfo.items,
-      length: +extraInfo.length,
-      tokenCost: +extraInfo.tokenCost,
-      solCost: +extraInfo.solCost,
-      lore: extraInfo.lore,
-      traitsHashlist: extraInfo.traitsHashlist,
-      nftsHashlist: extraInfo.nftsHashlist,
-      available: false,
-      expiration: +extraInfo.expiration,
-      limit: +extraInfo.limit,
-      created: new Date(),
-    });
+        items: extraInfo.items,
+        length: +extraInfo.length,
+        tokenCost: +extraInfo.tokenCost,
+        solCost: +extraInfo.solCost,
+        lore: extraInfo.lore,
+        traitsHashlist: extraInfo.traitsHashlist,
+        nftsHashlist: extraInfo.nftsHashlist,
+        available: false,
+        expiration: +extraInfo.expiration,
+        limit: +extraInfo.limit,
+        created: new Date()
+    })
     res.status(200).json({ info: "success" });
-  } else if (requestedInfo === "addMissionToDatabase2") {
+} else if (requestedInfo === "addMissionToDatabase2") {
     await updateDoc(doc(db, "admin", extraInfo.name), {
-      items: extraInfo.items,
-      length: +extraInfo.length,
-      tokenCost: +extraInfo.tokenCost,
-      solCost: +extraInfo.solCost,
-      lore: extraInfo.lore,
-      traitsHashlist: extraInfo.traitsHashlist,
-      nftsHashlist: extraInfo.nftsHashlist,
-      expiration: +extraInfo.expiration,
-      limit: +extraInfo.limit,
-    });
+        items: extraInfo.items,
+        length: +extraInfo.length,
+        tokenCost: +extraInfo.tokenCost,
+        solCost: +extraInfo.solCost,
+        lore: extraInfo.lore,
+        traitsHashlist: extraInfo.traitsHashlist,
+        nftsHashlist: extraInfo.nftsHashlist,
+        expiration: +extraInfo.expiration,
+        limit: +extraInfo.limit
+    })
     res.status(200).json({ info: "success" });
-  } else if (requestedInfo === "updateMissionAvailability") {
+} else if (requestedInfo === "updateMissionAvailability") {
     await updateDoc(doc(db, "admin", extraInfo.id), {
-      available: extraInfo.value,
-    });
+        available: extraInfo.value
+    })
     res.status(200).json({ info: "success" });
-  } else if (requestedInfo === "deleteDocument") {
-    await deleteDoc(doc(db, "admin", extraInfo));
+} else if (requestedInfo === "deleteDocument") {
+    await deleteDoc(doc(db, "admin", extraInfo))
     res.status(200).json({ info: "success" });
-  } else if (requestedInfo === "updateHashlist") {
+} else if (requestedInfo === "updateHashlist") {
     await updateDoc(doc(db, "info", "rewards"), {
-      hashlist: extraInfo,
-    });
+        hashlist: extraInfo
+    })
     res.status(200).json({ info: "success" });
-  } else if (requestedInfo === "updateHashlist2") {
+}
+else if (requestedInfo === "updateHashlist2") {
     await updateDoc(doc(db, "info", "nfts"), {
-      hashlist: extraInfo,
-    });
+        hashlist: extraInfo
+    })
     res.status(200).json({ info: "success" });
-  } else if (requestedInfo === "deleteTrait") {
-    await deleteDoc(doc(db, "traits", extraInfo));
+}
+else if (requestedInfo === "deleteTrait") {
+    await deleteDoc(doc(db, "traits", extraInfo))
     res.status(200).json({ info: "success" });
-  } else if (requestedInfo === "addTrait") {
-    await addDoc(collection(db, "traits"), extraInfo);
+} 
+else if (requestedInfo === "addTrait") {
+    await addDoc(collection(db, "traits"), extraInfo)
     res.status(200).json({ info: "success" });
-  }
+}
+
+else if (requestedInfo === "fixMission") {
+    function weightedRand(spec: any) {
+        var i,
+            j,
+            table: any = [];
+        for (i in spec) {
+            for (j = 0; j < spec[i].chance * 100; j++) {
+                table.push({ item: i, number: spec[i].number });
+            }
+        }
+        return table[Math.floor(Math.random() * table.length)];
+    }
+    const adminMission = await getDoc(doc(db, "admin", extraInfo.mission))
+    var rand012 = weightedRand(adminMission?.data()?.items);
+    const day = 86400 * 1000
+    const week = (86400 * 7) * 1000
+    const sentDate = new Date(extraInfo.timeSent)
+    const returnDate = new Date(Number(sentDate.getTime()) + (day * +adminMission?.data()?.length))
+    const sidekickReturnDate = new Date((Number(sentDate.getTime()) + ((day - 1440000) * (+adminMission?.data()?.length))))
+
+    console.log(adminMission.data())
+
+    await addDoc(collection(db, "missions"), {
+        claimed: false,
+        owner: extraInfo.owner,
+        timeSent: sentDate,
+        timeReturn: extraInfo.sidekickHash ? sidekickReturnDate : returnDate,
+        nftHash: extraInfo.nftHash,
+        nftIMG: extraInfo.nftIMG,
+        nftID: extraInfo.nftID,
+        sidekickHash: extraInfo.sidekickHash ?? null,
+        sidekickIMG: extraInfo.sidekickIMG ?? null,
+        sidekickID: extraInfo.sidekickID ?? null,
+        mission: extraInfo.mission,
+        signature: "bypass",
+        result: rand012
+    })
+    await updateDoc(doc(db, "nfts", extraInfo.nftHash), {
+        completedMissions: arrayUnion(extraInfo.mission)
+    })
+    await updateDoc(doc(db, "admin", extraInfo.mission), {
+        limit: adminMission?.data()?.limit ? +(adminMission?.data()?.limit - 1) : 0
+    })
+    res.status(200).json({ info: "success" });
+}
 
   if (requestedInfo === "updateAppliedTraits") {
     await updateDoc(doc(db1, "nfts", extraInfo.nft), {
