@@ -708,7 +708,7 @@ export default function Admin() {
                 },
                 body: JSON.stringify({ email: email, password: password })
             }
-            var response = await fetch('./api/signIn', requestData)
+            var response = await fetch('./api/adventures/signIn', requestData)
             const res = await response.json()
             if (res === "success") {
                 alert.removeAll()
