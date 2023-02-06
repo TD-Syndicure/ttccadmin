@@ -4746,6 +4746,147 @@ h2 {
   font-size: 100px;
 }
 
+/* THUDS CSS */
+
+.mintNFT {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  max-width: 95vw;
+  background: #7cfdad20;
+  width: fit-content;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #7cfdad;
+  margin: 0 auto;
+}
+
+.uploadImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #ffffff;
+  border-radius: 10px;
+  width: 200px;
+  height: 200px;
+  cursor: pointer;
+  border: 2px dashed #7cfdad;
+}
+
+.uploadImage:nth-of-type(2) {
+  opacity: 0.5;
+}
+
+.uploadImage h1 {
+  width: 70%;
+  text-align: center;
+}
+
+.nftInformation {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 100%;
+}
+
+.inputRow {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 100%;
+}
+
+.attributeRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  max-width: 100%;
+}
+
+.inputRow h1 {
+  color: #1e1e1e;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.inputRow input {
+  border: 1px solid #7cfdad;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.inputRow textarea {
+  border: 1px solid #7cfdad;
+  padding: 5px;
+  border-radius: 5px;
+  resize: vertical;
+  min-height: 100px;
+  max-height: 200px;
+  font-size: 14px;
+}
+
+.uploadImage h1 {
+  color: #1e1e1e;
+  font-size: 14px;
+}
+
+.plusSign {
+  background: #7cfdad;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.minusSign {
+  background: #fd7c7c;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.plusSign svg,
+.minusSign svg {
+  fill: #fff;
+  height: 20px;
+  width: 20px;
+}
+
+.disabledSign {
+  opacity: 0.3;
+  cursor: not-allowed !important;
+}
+
+.attributeRow button {
+  border: 1px solid #6fff76;
+  background: #10e01a9c;
+  border-radius: 5px;
+  padding: 5px 10px;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.mintNFTsButton {
+  border: 1px solid #6fff76;
+  background: #10e01a9c;
+  border-radius: 5px;
+  padding: 10px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+}
+
 @media (max-width: 1250px) {
   .backBtn {
     top: -10px;
@@ -4858,6 +4999,33 @@ h2 {
 
   .midTraitsSection .flex h3 {
     margin: 0;
+  }
+
+  .inputRow h1,
+  .inputRow input,
+  .inputRow textarea {
+    font-size: 12px;
+  }
+
+  .attributeRow input {
+    min-width: 80px;
+  }
+
+  .imagesRow {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .uploadImage {
+    width: 100px;
+    height: 100px;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .uploadImage h1 {
+    width: 95%;
+    font-size: 10px;
   }
 }
 
