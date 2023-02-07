@@ -10,11 +10,46 @@ import { BiImageAdd } from "react-icons/bi";
 import Head from "next/head";
 import { writeAPI } from "../scripts";
 import { programs } from "@metaplex/js";
-import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, TransactionInstruction } from "@solana/web3.js";
-import { AiOutlineCheck, AiOutlineEdit, AiOutlineMinus, AiOutlinePlus, AiOutlineUpload } from "react-icons/ai";
-import { MintLayout, TOKEN_PROGRAM_ID, createInitializeMintInstruction, getAssociatedTokenAddress, createAssociatedTokenAccountInstruction, getMinimumBalanceForRentExemptMint, createMintToCheckedInstruction, MINT_SIZE, createMint, createMintToInstruction } from "../node_modules/@solana/spl-token";
-import { PROGRAM_ID as MPL_TOKEN_METADATA_PROGRAM_ID, createCreateMasterEditionV3Instruction, createCreateMetadataAccountV2Instruction } from "@metaplex-foundation/mpl-token-metadata";
-import { bundlrStorage, keypairIdentity, Metaplex, toMetaplexFile, toMetaplexFileFromBrowser } from "@metaplex-foundation/js";
+import {
+  Connection,
+  Keypair,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js";
+import {
+  AiOutlineCheck,
+  AiOutlineEdit,
+  AiOutlineMinus,
+  AiOutlinePlus,
+  AiOutlineUpload,
+} from "react-icons/ai";
+import {
+  MintLayout,
+  TOKEN_PROGRAM_ID,
+  createInitializeMintInstruction,
+  getAssociatedTokenAddress,
+  createAssociatedTokenAccountInstruction,
+  getMinimumBalanceForRentExemptMint,
+  createMintToCheckedInstruction,
+  MINT_SIZE,
+  createMint,
+  createMintToInstruction,
+} from "../node_modules/@solana/spl-token";
+import {
+  PROGRAM_ID as MPL_TOKEN_METADATA_PROGRAM_ID,
+  createCreateMasterEditionV3Instruction,
+  createCreateMetadataAccountV2Instruction,
+} from "@metaplex-foundation/mpl-token-metadata";
+import {
+  bundlrStorage,
+  keypairIdentity,
+  Metaplex,
+  toMetaplexFile,
+  toMetaplexFileFromBrowser,
+} from "@metaplex-foundation/js";
 import { bs58 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 import Arweave from "arweave";
 const {
@@ -95,6 +130,9 @@ export default function Admin() {
     const IndivItem = ({ item, index }: { item: any; index: any }) => {
       const [hashlist, setHashlist]: any = useState(item?.data?.hashlist);
       const [metadata, setMetadata]: any = useState(item?.data?.metadata);
+      const [costMango, setMango]: any = useState(item?.data?.costMango);
+      const [costPuff, setPuff]: any = useState(item?.data?.costPuff);
+      const [costJelly, setJelly]: any = useState(item?.data?.costJelly);
       const [cost, setCost]: any = useState(item?.data?.cost);
       const [costSOL, setCostSOL]: any = useState(item?.data?.costSOL);
       const [quantity, setQuantity]: any = useState(item?.data?.quantity);
@@ -106,6 +144,9 @@ export default function Admin() {
         await writeAPI(publicKey?.toBase58()!, "updateTrait", null, {
           costSOL: +costSOL,
           cost: +cost,
+          costMango: +costMango,
+          costJelly: +costJelly,
+          costPuff: +costPuff,
           quantity: quantity,
           metadata: item?.data?.metadata,
           hashlist: item?.data?.hashlist,
@@ -121,6 +162,9 @@ export default function Admin() {
           {
             id: item.id,
             data: {
+              costMango: +costMango,
+              costJelly: +costJelly,
+              costPuff: +costPuff,
               cost: +cost,
               costSOL: +costSOL,
               metadata: item?.data?.metadata,
@@ -177,14 +221,17 @@ export default function Admin() {
                 <h1>
                   Trait Type:{" "}
                   <b>
-                    {JSON.parse(item.data.metadata).attributes[0].trait_type}
+                    {JSON.parse(item.data.metadata).attributes[0]?.trait_type}
                   </b>
                   Value:{" "}
-                  <b>{JSON.parse(item.data.metadata).attributes[0].value}</b>
+                  <b>{JSON.parse(item.data.metadata).attributes[0]?.value}</b>
                 </h1>
                 {/* <h1>Image: <b>{JSON.parse(item.data.metadata).image}</b></h1> */}
                 <h1>
-                  SPL Cost: <b>{item?.data?.cost}</b>
+                  PLTMX Cost: <b>{item?.data?.cost}</b>
+                  Jelly Cost: <b>{item?.data?.costJelly}</b>
+                  Mango Cost: <b>{item?.data?.costMango}</b>
+                  Puff Cost: <b>{item?.data?.costPuff}</b>
                   SOL Cost: <b>{item?.data?.costSOL}</b>
                   Quantity: <b>{item?.data?.quantity}</b>
                   Available:{" "}
@@ -210,12 +257,12 @@ export default function Admin() {
                 <h1>
                   Trait Type:{" "}
                   <b>
-                    {JSON.parse(item.data.metadata).attributes[0].trait_type}
+                    {JSON.parse(item.data.metadata).attributes[0]?.trait_type}
                   </b>
                 </h1>
                 <h1>
                   Value:{" "}
-                  <b>{JSON.parse(item.data.metadata).attributes[0].value}</b>
+                  <b>{JSON.parse(item.data.metadata).attributes[0]?.value}</b>
                 </h1>
                 <div>
                   <textarea
@@ -232,37 +279,74 @@ export default function Admin() {
                 </div> */}
 
                 {/* <h1>Image: <b>{JSON.parse(item.data.metadata).image}</b></h1> */}
-                <div>
-                  <h1>SPL Price:</h1>
-                  <input
-                    type="number"
-                    value={cost}
-                    onChange={(e) => setCost(+e.target.value)}
-                  />{" "}
-                </div>
-                <div>
-                  <h1>SOL Price:</h1>
-                  <input
-                    type="number"
-                    value={costSOL}
-                    onChange={(e) => setCostSOL(+e.target.value)}
-                  />
-                </div>
-                <div>
-                  <h1>Quantity:</h1>
-                  <input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(+e.target.value)}
-                  />
-                  <h1>Available:</h1>
+                <div className="flex flex-row">
+                  <div>
+                    <h1>PLTMX Price:</h1>
+                    <input
+                      className="w-[5rem]"
+                      type="number"
+                      value={cost}
+                      onChange={(e) => setCost(+e.target.value)}
+                    />{" "}
+                  </div>
+                  <div>
+                    {" "}
+                    <h1>Jelly Cost:</h1>
+                    <input
+                      className="w-[5rem]"
+                      type="number"
+                      value={costJelly}
+                      onChange={(e) => setJelly(+e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    {" "}
+                    <h1>Mango Cost:</h1>
+                    <input
+                      className="w-[5rem]"
+                      type="number"
+                      value={costMango}
+                      onChange={(e) => setMango(+e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    {" "}
+                    <h1>Puff Cost:</h1>
+                    <input
+                      className="w-[5rem]"
+                      type="number"
+                      value={costPuff}
+                      onChange={(e) => setPuff(+e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <h1>SOL Price:</h1>
+                    <input
+                      className="w-[5rem]"
+                      type="number"
+                      value={costSOL}
+                      onChange={(e) => setCostSOL(+e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <h1>Quantity:</h1>
+                    <input
+                      className="w-[5rem]"
+                      type="number"
+                      value={quantity}
+                      onChange={(e) => setQuantity(+e.target.value)}
+                    />
+                  </div>{" "}
+                  <div>
+                    <h1>Available:</h1>
 
-                  <input
-                    style={{ width: "fit-content" }}
-                    type="checkbox"
-                    checked={available}
-                    onChange={(e) => setAvailable(!available)}
-                  />
+                    <input
+                      style={{ width: "fit-content" }}
+                      type="checkbox"
+                      checked={available}
+                      onChange={(e) => setAvailable(!available)}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -279,6 +363,9 @@ export default function Admin() {
       const [hashlist, setHashlist]: any = useState();
       const [metadata, setMetadata]: any = useState();
       const [cost, setCost]: any = useState(0);
+      const [costMango, setMango]: any = useState(0);
+      const [costPuff, setPuff]: any = useState(0);
+      const [costJelly, setJelly]: any = useState(0);
       const [costSOL, setCostSOL]: any = useState(0);
       const [quantity, setQuantity]: any = useState(0);
       const [available, setAvailable]: any = useState(false);
@@ -315,6 +402,9 @@ export default function Admin() {
           null,
           {
             costSOL: +costSOL,
+            costMango: +costMango,
+            costJelly: +costJelly,
+            costPuff: +costPuff,
             cost: +cost,
             metadata: metadata,
             hashlist: hashlist,
@@ -330,6 +420,9 @@ export default function Admin() {
               id: newTraitDocID.info,
               data: {
                 costSOL: +costSOL,
+                costMango: +costMango,
+                costJelly: +costJelly,
+                costPuff: +costPuff,
                 cost: +cost,
                 metadata: metadata,
                 hashlist: hashlist,
@@ -342,6 +435,9 @@ export default function Admin() {
           setMetadata();
           setQuantity(0);
           setCost(0);
+          setMango(0);
+          setJelly(0);
+          setPuff(0);
           setCostSOL(0);
           setLoading(false);
           setAvailable(false);
@@ -375,16 +471,42 @@ export default function Admin() {
                   onChange={(e) => setMetadata(e.target.value)}
                 />
               </div> */}
-              <div>
-                <h1>SPL Cost:</h1>
+              <div className="flex flex-row flex-wrap ">
+                <h1>PLTMX Cost:</h1>
                 <input
+                  className="w-[3rem]"
                   type="number"
                   value={cost}
                   onChange={(e) => setCost(+e.target.value)}
                 />
 
+                <h1>Jelly Cost:</h1>
+                <input
+                  className="w-[3rem]"
+                  type="number"
+                  value={costJelly}
+                  onChange={(e) => setCost(+e.target.value)}
+                />
+
+                <h1>Mango Cost:</h1>
+                <input
+                  className="w-[3rem]"
+                  type="number"
+                  value={costMango}
+                  onChange={(e) => setCost(+e.target.value)}
+                />
+
+                <h1>Puff Cost:</h1>
+                <input
+                  className="w-[3rem]"
+                  type="number"
+                  value={costPuff}
+                  onChange={(e) => setCost(+e.target.value)}
+                />
+
                 <h1>SOL Cost:</h1>
                 <input
+                  className="w-[3rem]"
                   type="number"
                   value={costSOL}
                   onChange={(e) => setCostSOL(+e.target.value)}
@@ -392,6 +514,7 @@ export default function Admin() {
 
                 <h1>Quantity:</h1>
                 <input
+                  className="w-[3rem]"
                   type="number"
                   value={quantity}
                   onChange={(e) => setQuantity(+e.target.value)}
@@ -433,6 +556,9 @@ export default function Admin() {
       ]);
       const [quantity, setQuantity] = useState<number>(0);
       const [cost, setCost]: any = useState(0);
+      const [costMango, setMango]: any = useState(0);
+      const [costPuff, setPuff]: any = useState(0);
+      const [costJelly, setJelly]: any = useState(0);
       const [costSOL, setCostSOL]: any = useState(0);
       const [available, setAvailable]: any = useState(false);
       const [file, setFile] = useState<File>();
@@ -759,6 +885,9 @@ export default function Admin() {
                     {
                       costSOL: +costSOL,
                       cost: +cost,
+                      costMango: +costMango,
+                      costJelly: +costJelly,
+                      costPuff: +costPuff,
                       metadata: JSON.stringify(localMetadata),
                       hashlist: JSON.stringify(nftsMinted),
                       quantity: quantity,
@@ -773,6 +902,9 @@ export default function Admin() {
                         data: {
                           costSOL: +costSOL,
                           cost: +cost,
+                          costMango: +costMango,
+                          costJelly: +costJelly,
+                          costPuff: +costPuff,
                           metadata: JSON.stringify(localMetadata),
                           hashlist: JSON.stringify(nftsMinted),
                           quantity: quantity,
@@ -807,6 +939,9 @@ export default function Admin() {
                 {
                   costSOL: +costSOL,
                   cost: +cost,
+                  costMango: +costMango,
+                  costJelly: +costJelly,
+                  costPuff: +costPuff,
                   metadata: JSON.stringify(localMetadata),
                   hashlist: JSON.stringify(nftsMinted),
                   quantity: quantity,
@@ -821,6 +956,9 @@ export default function Admin() {
                     data: {
                       costSOL: +costSOL,
                       cost: +cost,
+                      costMango: +costMango,
+                      costJelly: +costJelly,
+                      costPuff: +costPuff,
                       metadata: JSON.stringify(localMetadata),
                       hashlist: JSON.stringify(nftsMinted),
                       quantity: quantity,
@@ -934,8 +1072,9 @@ export default function Admin() {
             </div>
             <div className="inputRow">
               <h1>Store Info</h1>
-              <div className="attributeRow">
+              <div className="attributeRow flex">
                 <input
+                  className="w-[6rem]"
                   type="number"
                   step={1}
                   min={0}
@@ -943,6 +1082,7 @@ export default function Admin() {
                   onChange={(e) => setQuantity(+e.target.value)}
                 />
                 <input
+                  className="w-[6rem]"
                   type="number"
                   step={0.1}
                   min={0}
@@ -950,11 +1090,36 @@ export default function Admin() {
                   onChange={(e) => setCostSOL(+e.target.value)}
                 />
                 <input
+                  className="w-[6rem]"
                   type="number"
                   step={0.1}
                   min={0}
-                  placeholder="SPL Cost"
+                  placeholder="PLTMX Cost"
                   onChange={(e) => setCost(+e.target.value)}
+                />
+                <input
+                  className="w-[6rem]"
+                  type="number"
+                  step={0.1}
+                  min={0}
+                  placeholder="Jelly Cost"
+                  onChange={(e) => setJelly(+e.target.value)}
+                />
+                <input
+                  className="w-[6rem]"
+                  type="number"
+                  step={0.1}
+                  min={0}
+                  placeholder="Mango Cost"
+                  onChange={(e) => setMango(+e.target.value)}
+                />
+                <input
+                  className="w-[6rem]"
+                  type="number"
+                  step={0.1}
+                  min={0}
+                  placeholder="Puff Cost"
+                  onChange={(e) => setPuff(+e.target.value)}
                 />
               </div>
             </div>
@@ -1023,9 +1188,12 @@ export default function Admin() {
         <div className="addTraitItems">
           {/* <EditHashlist /> */}
           <h1 style={{ color: "#fff" }} className="traitTitle">
-            Add Item
+            Manually Add Item To the store
           </h1>
           <AddItem2 />
+          <h1 style={{ color: "#fff" }} className="traitTitle">
+            Mint New Item To the store
+          </h1>
           <AddItem />
 
           <h1 style={{ color: "#fff" }} className="traitTitle">

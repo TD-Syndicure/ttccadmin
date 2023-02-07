@@ -989,7 +989,7 @@ button:disabled {
 .addTraitItems {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 20px;
 }
 
@@ -1652,7 +1652,7 @@ h2 {
 .addTraitItems {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 20px;
 }
 
@@ -1725,6 +1725,7 @@ h2 {
 
 .traitGrid {
   display: flex;
+  justify-content: center;
   grid-gap: 16px;
   flex-wrap: wrap;
 }
@@ -4363,7 +4364,7 @@ h2 {
 .addTraitItems {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 20px;
 }
 
@@ -4459,6 +4460,7 @@ h2 {
 .traitGrid {
   display: flex;
   grid-gap: 16px;
+  justify-content: center;
   flex-wrap: wrap;
 }
 

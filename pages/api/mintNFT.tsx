@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   const uri = reqBody.uri
 
   //setting up metaplex
-  const keypair = Keypair.fromSecretKey(bs58.decode(process.env.TRAITS_ENCRYPT!));
+  const keypair = Keypair.fromSecretKey(bs58.decode(process.env.TRAITS_STORE_ENCRYPT!));
   const metaplex = Metaplex.make(connection)
     .use(keypairIdentity(keypair))
     .use(bundlrStorage());
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     symbol: metadata.symbol,
     uri: uri,
     sellerFeeBasisPoints: metadata.seller_fee_basis_points,
-    collection: new PublicKey("FsZhojkEDJkn77G5GqmH799LRWQMgk5oxaG2r1G8vHWU"),
+    collection: new PublicKey("J5zp3LU4kfn9PRFCMAZ4HwsQJTHcRCcztvsfDVYjy1yv"),
     collectionAuthority: keypair,
   });
 
