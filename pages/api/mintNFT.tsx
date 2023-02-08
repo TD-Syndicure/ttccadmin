@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     symbol: metadata.symbol,
     uri: uri,
     sellerFeeBasisPoints: metadata.seller_fee_basis_points,
-    collection: new PublicKey("J5zp3LU4kfn9PRFCMAZ4HwsQJTHcRCcztvsfDVYjy1yv"),
+    collection: new PublicKey("4TTf6hMf6NPsQFUfwNT957WgCC8pDpSGWxUycf3aivCP"),
     collectionAuthority: keypair,
   });
 
