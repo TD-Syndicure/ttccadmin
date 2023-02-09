@@ -63,7 +63,9 @@ export default async function handler(
       lore: extraInfo.lore,
       traitsHashlist: extraInfo.traitsHashlist,
       nftsHashlist: extraInfo.nftsHashlist,
-      available: false,
+      available: extraInfo.available,
+      ttccOnly: extraInfo.ttccOnly,
+      repeat: extraInfo.repeat,
       expiration: +extraInfo.expiration,
       limit: +extraInfo.limit,
       created: new Date(),
@@ -85,6 +87,16 @@ export default async function handler(
   } else if (requestedInfo === "updateMissionAvailability") {
     await updateDoc(doc(db, "admin", extraInfo.id), {
       available: extraInfo.value,
+    });
+    res.status(200).json({ info: "success" });
+  } else if (requestedInfo === "updateTTCCOnly") {
+    await updateDoc(doc(db, "admin", extraInfo.id), {
+      ttccOnly: extraInfo.value,
+    });
+    res.status(200).json({ info: "success" });
+  } else if (requestedInfo === "updateRepeat") {
+    await updateDoc(doc(db, "admin", extraInfo.id), {
+      repeat: extraInfo.value,
     });
     res.status(200).json({ info: "success" });
   } else if (requestedInfo === "deleteDocument") {
