@@ -298,8 +298,8 @@ export default function Admin() {
                         <h3><input type="number" onChange={(e) => setNothingPercent(e.target.value)} />% chance for absolutely nothing</h3>
                         <h3><input type="number" onChange={(e) => setTokenCost(e.target.value)} /> $PLTMX & <input type="number" onChange={(e) => setSOLCost(e.target.value)} /> SOL ---- <input type="number" onChange={(e) => setLength(e.target.value)} /> day(s)</h3>
                         <h3>LORE: <textarea onChange={(e) => setLore(e.target.value)} /></h3>
-                        <h3>Traits Rewards Hashlist: <textarea style={{ minHeight: '150px' }} value={traitsHashlist} onChange={(e) => setTraitsHashlist(e.target.value)} /></h3>
-                        <h3>NFT Rewards Hashlist: <textarea style={{ minHeight: '150px' }} value={nftsHashlist} onChange={(e) => setNFTsHashlist(e.target.value)} /></h3>
+                        <h3>Traits Rewards Hashlist: <textarea style={{ minHeight: '150px', color: 'black' }} value={traitsHashlist} onChange={(e) => setTraitsHashlist(e.target.value)} /></h3>
+                        <h3>NFT Rewards Hashlist: <textarea style={{ minHeight: '150px', color: 'black' }} value={nftsHashlist} onChange={(e) => setNFTsHashlist(e.target.value)} /></h3>
                         <h3><input type="number" onChange={(e) => setExpiration(e.target.value)} /> day(s) until expiration.</h3>
                         <h3>Limit of <input type="number" onChange={(e) => setLimit(e.target.value)} /> people can board this mission.</h3>
                         <h4 style={{ fontSize: '12px', opacity: 0.5, textAlign: 'center' }}>EVERY FIELD IS REQUIRED. IF YOU DON'T WANT AN OPTION TO EXIST, SET TO 0 (except expiration & limit, set to 1000 if no expiration)</h4>
@@ -467,9 +467,9 @@ export default function Admin() {
                                 <h3><input type="number" value={tokenPercent5} onChange={(e) => setTokenPercent5(e.target.value)} />% chance for <input type="number" value={tokenAmount5} onChange={(e) => setTokenAmount5(e.target.value)} /> $PUFF</h3>
                                 <h3><input type="number" value={nothingPercent} onChange={(e) => setNothingPercent(e.target.value)} />% chance for absolutely nothing</h3>
                                 <h3><input type="number" value={tokenCost} onChange={(e) => setTokenCost(e.target.value)} /> $PLTMX & <input type="number" value={solCost} onChange={(e) => setSOLCost(e.target.value)} /> SOL ---- <input type="number" value={length} onChange={(e) => setLength(e.target.value)} /> day(s)</h3>
-                                <h3>LORE: <textarea onChange={(e) => setLore(e.target.value)} value={lore} /></h3>
-                                <h3>Traits Rewards Hashlist: <textarea style={{ minHeight: '150px' }} value={traitsHashlist} onChange={(e) => setTraitsHashlist(e.target.value)} /></h3>
-                                <h3>NFT Rewards Hashlist: <textarea style={{ minHeight: '150px' }} value={nftsHashlist} onChange={(e) => setNFTsHashlist(e.target.value)} /></h3>
+                                <h3>LORE: <textarea className="text-black" onChange={(e) => setLore(e.target.value)} value={lore} /></h3>
+                                <h3>Traits Rewards Hashlist: <textarea className="text-black" style={{ minHeight: '150px' }} value={traitsHashlist} onChange={(e) => setTraitsHashlist(e.target.value)} /></h3>
+                                <h3>NFT Rewards Hashlist: <textarea className="text-black" style={{ minHeight: '150px' }} value={nftsHashlist} onChange={(e) => setNFTsHashlist(e.target.value)} /></h3>
                                 <h4 style={{ fontSize: '12px', opacity: 0.5, textAlign: 'center' }}>EVERY FIELD IS REQUIRED. IF YOU DON'T WANT AN OPTION TO EXIST, SET TO 0 (except expiration & limit, set to 1000 if no expiration)</h4>
                                 <h3><input type="number" value={expiration} onChange={(e) => setExpiration(e.target.value)} /> day(s) until expiration.</h3>
                                 <h3>Limit of <input type="number" value={limit} onChange={(e) => setLimit(e.target.value)} /> people can board this mission.</h3>
@@ -649,12 +649,12 @@ export default function Admin() {
                     {!open ? <></> :
                         <>
                             <button onClick={() => { setSure(false); setOpen(!open) }}>Cancel</button>
-                            <textarea value={localHashlist} onChange={(e) => setLocalHashlist(e.target.value)} />
+                            <textarea className="text-black" value={localHashlist} onChange={(e) => setLocalHashlist(e.target.value)} />
                         </>}
                     {!open3 ? <></> :
                         <>
                             <button onClick={() => { setSure(false); setOpen3(!open3) }}>Cancel</button>
-                            <textarea value={localHashlist3} onChange={(e) => setLocalHashlist3(e.target.value)} />
+                            <textarea className="text-black" value={localHashlist3} onChange={(e) => setLocalHashlist3(e.target.value)} />
                         </>}
                 </div>
                 {open2 &&
@@ -663,8 +663,8 @@ export default function Admin() {
                         <div className="addTrait">
                             {traitMetadata ? <img src={JSON.parse(traitMetadata)?.image} /> : <img src="/silhouette.png" />}
                             <div className="innerAdd">
-                                <textarea onChange={(e) => setTraitHashlist(e.target.value)} value={traitHashlist} placeholder={"Trait hashlist"} />
-                                <textarea onChange={(e) => setTraitMetadata(e.target.value)} value={traitMetadata} placeholder={"Trait metadata"} />
+                                <textarea className="text-black" onChange={(e) => setTraitHashlist(e.target.value)} value={traitHashlist} placeholder={"Trait hashlist"} />
+                                <textarea className="text-black" onChange={(e) => setTraitMetadata(e.target.value)} value={traitMetadata} placeholder={"Trait metadata"} />
                                 <button onClick={() => addIt()}>Add Trait</button>
                             </div>
                         </div>
@@ -673,8 +673,8 @@ export default function Admin() {
                                 <div className="addTrait">
                                     <img src={JSON.parse(o?.metadata)?.image} />
                                     <div className="innerAdd">
-                                        <textarea value={o.hashlist} disabled />
-                                        <textarea value={o.metadata} disabled />
+                                        <textarea className="text-black" value={o.hashlist} disabled />
+                                        <textarea className="text-black" value={o.metadata} disabled />
                                         <button onClick={() => deleteIt(o)}>Delete Trait</button>
                                     </div>
                                 </div>
