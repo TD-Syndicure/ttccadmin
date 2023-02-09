@@ -1,31 +1,27 @@
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import type { NextApiRequest, NextApiResponse } from 'next';
 import {
-	getFirestore,
-	collection,
-	getDocs,
-	setDoc,
-	doc,
-	updateDoc,
-	getDoc,
-	deleteDoc,
-	query,
-    where,
-    limit,
-    orderBy
-} from "firebase/firestore/lite";
-import web3, {
-  Keypair,
-  Transaction,
-  LAMPORTS_PER_SOL,
-  SystemProgram,
-  Connection,
-  clusterApiUrl,
-  sendAndConfirmTransaction,
-  PublicKey
-} from "@solana/web3.js";
-import { ASSOCIATED_TOKEN_PROGRAM_ID, createAssociatedTokenAccountInstruction, createTransferInstruction, getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from "../../node_modules/@solana/spl-token"
-import bs58 from "bs58"
-import { wait } from '../../scripts/helpers';
-import {initializeApp} from 'firebase/app';
+    getFirestore,
+    collection,
+    getDocs,
+    setDoc,
+    doc,
+    updateDoc,
+    getDoc,
+    deleteDoc,
+    query,
+    addDoc,
+    Timestamp,
+    orderBy,
+    onSnapshot,
+    DocumentSnapshot,
+    where
+} from "firebase/firestore";
+import { initializeApp } from 'firebase/app';
+import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import { getAssociatedTokenAddress } from '../../node_modules/@solana/spl-token';
+import mints from "../../scripts/mints.json"
+import AImints from "../../scripts/aiNFTs.json"
 
 const firebaseConfig = {
     apiKey: process.env.API_KEY,
@@ -34,67 +30,283 @@ const firebaseConfig = {
     storageBucket: process.env.STORAGE_BUCKET,
     messagingSenderId: process.env.MESSAGING_SENDER_ID,
     appId: process.env.APP_ID,
-  };
-  
-  const app = initializeApp(firebaseConfig);
+};
 
-export default async function handler(req: any, res: any) {
+const app = initializeApp(firebaseConfig);
 
-    const connection = new Connection("https://greatest-summer-pine.solana-mainnet.discover.quiknode.pro/00ffa4253f9b899be3e75cb0e176091c6df54cac/", { commitment: "processed", confirmTransactionInitialTimeout: 60000 });
-    const requestData = JSON.parse(req.body)
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const db = getFirestore(app);
+
+    function createConnection(url = "https://patient-lively-brook.solana-mainnet.quiknode.pro/e00bf50f58434f5f45333bcbe77a45d69171cca1/") {
+        return new Connection(url, { commitment: "confirmed", confirmTransactionInitialTimeout: 60000 });
+    }
+    const connection = createConnection();
+
+    const requestData = JSON.parse(req.body)
+    const walletAddress = requestData.publicKey
+    const requestedInfo = requestData.request
     const signature = requestData.signature
     const extraInfo = requestData.extraInfo
+    const missionsCompleted = requestData.missionsCompleted
 
-    try {
+    const nft = requestData.nft
+    const sidekick = requestData.sidekick
 
-        const firstCheck = await connection.getSignatureStatus(signature)
-        if (firstCheck?.value?.confirmationStatus === "processed" || firstCheck?.value?.confirmationStatus === "confirmed" || firstCheck?.value?.confirmationStatus === "finalized") {
-            await updateDoc(doc(db, "traits", extraInfo.id), {
-                quantity: +extraInfo.quantity
-            })
-            await wait(2000)
-            res.status(200).json({info: "success"});
+    const wait = (ms: any) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function weightedRand(spec: any) {
+        var i,
+            j,
+            table: any = [];
+        for (i in spec) {
+            for (j = 0; j < spec[i].chance * 100; j++) {
+                table.push({ item: i, number: spec[i].number });
+            }
         }
-        const blockhash = await connection.getLatestBlockhash()
-        await connection.confirmTransaction({
-            signature: signature,
-            blockhash: blockhash.blockhash,
-            lastValidBlockHeight: blockhash.lastValidBlockHeight,
-        }).then(async () => {
-            await updateDoc(doc(db, "traits", extraInfo.id), {
-                quantity: +extraInfo.quantity
-            })
-            await wait(2000)
-            res.status(200).json({info: "success"});
-        }).catch(async(e: any) => {
-            await connection.confirmTransaction({
-                signature: signature,
-                blockhash: blockhash.blockhash,
-                lastValidBlockHeight: blockhash.lastValidBlockHeight,
-            }).then(async () => {
-                await updateDoc(doc(db, "traits", extraInfo.id), {
-                    quantity: +extraInfo.quantity
-                })
-                await wait(2000)
-                res.status(200).json({info: "success"});
-            }).catch((e: any) => {
-                console.log(e)
-                res.status(500).json({info: "failed"});
-            })
-        })
+        //console.log(table)
+        return table[Math.floor(Math.random() * table.length)];
+    }
+    var rand012 = weightedRand(requestData.missionInfo.items);
 
-    } catch(e) {
-        const firstCheck = await connection.getSignatureStatus(signature)
-        if (firstCheck?.value?.confirmationStatus === "processed" || firstCheck?.value?.confirmationStatus === "confirmed" || firstCheck?.value?.confirmationStatus === "finalized") {
-            await updateDoc(doc(db, "traits", extraInfo.id), {
-                quantity: +extraInfo.quantity
-            })
-            await wait(2000)
-            res.status(200).json({info: "success"});
-        }
-        console.log(e)
-        res.status(500).json({info: "failed"});
+
+    if (requestedInfo === "startMission") {
+
+        let i = 0
+        const clrInt = setInterval(async () => {
+            i++
+            if (i < 60) {
+                try {
+                    const firstCheck = await connection.getSignatureStatus(signature)
+                    if ((firstCheck?.value?.confirmationStatus === "processed" || firstCheck?.value?.confirmationStatus === "confirmed" || firstCheck?.value?.confirmationStatus === "finalized") && firstCheck?.value?.err === null) {
+
+                        clearInterval(clrInt)
+
+                        /* =============================================================================================================== */
+                        /* =============================================================================================================== */
+                        /* =============================================================================================================== */
+                        /* =============================================================================================================== */
+                        /* ============================================== SECURITY MEASURES ============================================== */
+                        /* =============================================================================================================== */
+                        /* =============================================================================================================== */
+                        /* =============================================================================================================== */
+                        /* =============================================================================================================== */
+
+                        const parsedSignature = await connection.getParsedTransaction(signature)
+                        let user: any = parsedSignature?.transaction?.message?.accountKeys[0]?.pubkey?.toBase58()
+
+                        const adminMission = await getDoc(doc(db, "admin", extraInfo.id))
+
+                        /* Checking for an eligible Time Machine */
+                        const devAssociatedAccount2 = await getAssociatedTokenAddress(new PublicKey("Ez7z9Y2bp7B1ErjEFTFqVyCMsWb38du7bTCdU15qMVKz"), new PublicKey("TTCCrCrX9RRGdEEjyvQwSvYWY9K7gmSXHuchfzhSa8L"))
+                        const userAssociatedAccount2 = await getAssociatedTokenAddress(new PublicKey("Ez7z9Y2bp7B1ErjEFTFqVyCMsWb38du7bTCdU15qMVKz"), new PublicKey(user))
+                        const TXincludesNFT2 = parsedSignature?.transaction?.message?.instructions?.some((o: any) => {
+                            return o?.parsed?.info?.source === userAssociatedAccount2.toBase58() && o?.parsed?.info?.destination === devAssociatedAccount2.toBase58() && +o?.parsed?.info?.amount === 1
+                        })
+                        if (!TXincludesNFT2) {
+                            console.log("This signature does not include the correct NFT.")
+                            res.status(500).json({ info: "failed" });
+                            return
+                        }
+
+                        /* Checking they paid sol for the mission */
+                        if (adminMission?.data()?.solCost && adminMission?.data()?.solCost > 0) {
+                            const TXincludesSOLPayment = parsedSignature?.transaction?.message?.instructions?.some((o: any) => {
+                                return o?.parsed?.info?.source === user && o?.parsed?.info?.destination === "TTCCrCrX9RRGdEEjyvQwSvYWY9K7gmSXHuchfzhSa8L" && +o?.parsed?.info?.lamports === +((adminMission?.data()?.solCost * LAMPORTS_PER_SOL).toFixed(0))
+                            })
+                            //will fail if they did not send the sol fee
+                            if (!TXincludesSOLPayment) {
+                                console.log("Did not pay the fee")
+                                res.status(500).json({ info: "failed" });
+                                return
+                            }
+                        }
+
+                        /* Checking they paid pltmx for the mission */
+                        if (adminMission?.data()?.tokenCost && adminMission?.data()?.tokenCost > 0) {
+                            const devAssociatedAccount2 = await getAssociatedTokenAddress(new PublicKey("pLtMXLgfyTsRfZyxnFkJpWqHBxMTvkr4tyMLgyj9wrY"), new PublicKey("TTCCrCrX9RRGdEEjyvQwSvYWY9K7gmSXHuchfzhSa8L"))
+                            const userAssociatedAccount2 = await getAssociatedTokenAddress(new PublicKey("pLtMXLgfyTsRfZyxnFkJpWqHBxMTvkr4tyMLgyj9wrY"), new PublicKey(user))
+                            const TXincludesTokenPayment = parsedSignature?.transaction?.message?.instructions?.some((o: any) => {
+                                return o?.parsed?.info?.source === userAssociatedAccount2.toBase58() && o?.parsed?.info?.destination === devAssociatedAccount2.toBase58() && +o?.parsed?.info?.amount === +((adminMission?.data()?.tokenCost * LAMPORTS_PER_SOL).toFixed(0))
+                            })
+                            //will fail if they did not send the token fee
+                            if (!TXincludesTokenPayment) {
+                                console.log("Did not pay the fee")
+                                res.status(500).json({ info: "failed" });
+                                return
+                            }
+                        }
+
+                        /* Checking they paid a sidekick nft for the mission */
+                        if (sidekick) {
+                            const devAssociatedAccount2 = await getAssociatedTokenAddress(new PublicKey(sidekick), new PublicKey("TTCCrCrX9RRGdEEjyvQwSvYWY9K7gmSXHuchfzhSa8L"))
+                            const userAssociatedAccount2 = await getAssociatedTokenAddress(new PublicKey(sidekick), new PublicKey(user))
+                            const TXincludesSidekickPayment = parsedSignature?.transaction?.message?.instructions?.some((o: any) => {
+                                return o?.parsed?.info?.source === userAssociatedAccount2.toBase58() && o?.parsed?.info?.destination === devAssociatedAccount2.toBase58() && +o?.parsed?.info?.amount === 1
+                            })
+                            //will fail if they did not send the token fee
+                            if (!TXincludesSidekickPayment) {
+                                console.log("Did not pay the sidekick")
+                                res.status(500).json({ info: "failed" });
+                                return
+                            }
+                        }
+
+                        /* Checking they paid a normal nft for the mission */
+                        if (nft) {
+                            const devAssociatedAccount2 = await getAssociatedTokenAddress(new PublicKey(nft), new PublicKey("TTCCrCrX9RRGdEEjyvQwSvYWY9K7gmSXHuchfzhSa8L"))
+                            const userAssociatedAccount2 = await getAssociatedTokenAddress(new PublicKey(nft), new PublicKey(user))
+                            const TXincludesNFTPayment = parsedSignature?.transaction?.message?.instructions?.some((o: any) => {
+                                return o?.parsed?.info?.source === userAssociatedAccount2.toBase58() && o?.parsed?.info?.destination === devAssociatedAccount2.toBase58() && +o?.parsed?.info?.amount === 1
+                            })
+                            //will fail if they did not send the token fee
+                            if (!TXincludesNFTPayment) {
+                                console.log("Did not pay the NFT")
+                                res.status(500).json({ info: "failed" });
+                                return
+                            }
+                        }
+
+                        //will fail if the tx is not sent within the last 60 seconds
+                        if (new Date().getTime() - (+parsedSignature?.blockTime! * 1000) > 60000) {
+                            console.log("This signature has expired.")
+                            res.status(500).json({ info: "failed" });
+                            return
+                        }
+
+                        //this checks if a signature has already been used, so someone can't spam the same transaction over and over to exploit that way.
+                        const checkIfSignatureHasBeenUsed = await getDoc(doc(db, "signatures", signature))
+                        if (checkIfSignatureHasBeenUsed.exists()) {
+                            console.log("This signature has already been used to claim a box.")
+                            res.status(500).json({ info: "failed" });
+                            return
+                        } else {
+                            await setDoc(doc(db, "signatures", signature), {})
+                        }
+
+                        //check if this nft is eligible to be sent on mission
+                        if (mints.includes(nft)) {
+                            console.log("Doesn't exist")
+                            res.status(500).json({ info: "failed" });
+                            return
+                        }
+
+                        //check if this ai nft is eligible to be sent on mission
+                        if (sidekick && AImints.includes(sidekick)) {
+                            console.log("Doesn't exist")
+                            res.status(500).json({ info: "failed" });
+                            return
+                        }
+
+                        /* =============================================================================================================== */
+                        /* =============================================================================================================== */
+                        /* =============================================================================================================== */
+                        /* =============================================================================================================== */
+                        /* =============================================================================================================== */
+                        /* =============================================================================================================== */
+                        /* =============================================================================================================== */
+                        /* =============================================================================================================== */
+                        /* =============================================================================================================== */
+
+                        const day = 86400 * 1000
+                        const week = (86400 * 7) * 1000
+                        const sentDate = new Date()
+                        const returnDate = new Date(Number(sentDate.getTime()) + (day * extraInfo.data.length))
+                        const sidekickReturnDate = new Date((Number(sentDate.getTime()) + (day * (extraInfo.data.length * .95))))
+                        let newCompletedMissions: any = []
+                        missionsCompleted.forEach(async (el: any) => {
+                            if (el.nft === nft.mint) {
+                                newCompletedMissions = [...el.completed, extraInfo.id]
+                            }
+                        })
+                        await addDoc(collection(db, "missions"), {
+                            claimed: false,
+                            owner: walletAddress,
+                            timeSent: sentDate,
+                            timeReturn: sidekick ? sidekickReturnDate : returnDate,
+                            nftHash: nft.mint,
+                            nftIMG: nft.metadata.image,
+                            nftID: nft.metadata.name,
+                            sidekickHash: sidekick ? sidekick.mint : null,
+                            sidekickIMG: sidekick ? sidekick.metadata.image : null,
+                            sidekickID: sidekick ? sidekick.metadata.name : null,
+                            mission: extraInfo.id,
+                            signature: signature,
+                            result: rand012
+                        })
+                        await updateDoc(doc(db, "nfts", nft.mint), {
+                            completedMissions: newCompletedMissions
+                        })
+                        const alreadyDoc = await getDoc(doc(db, "admin", extraInfo.id))
+                        await updateDoc(doc(db, "admin", extraInfo.id), {
+                            limit: alreadyDoc?.data()?.limit ? +(alreadyDoc?.data()?.limit - 1) : 0
+                        })
+
+                        await wait(1500)
+
+                        res.status(200).json({ info: "success" });
+                        return
+                    }
+                } catch (e) {
+                    console.log(e)
+                }
+            } else {
+
+                console.log("Max attempts reached.")
+                res.status(500).json({ info: "max" });
+
+            }
+        }, 2000)
+    }
+
+    else if (requestedInfo === "speedUp") {
+
+        let i = 0
+        const clrInt = setInterval(async () => {
+            i++
+            if (i < 60) {
+                try {
+                    const firstCheck = await connection.getSignatureStatus(signature)
+                    if ((firstCheck?.value?.confirmationStatus === "processed" || firstCheck?.value?.confirmationStatus === "confirmed" || firstCheck?.value?.confirmationStatus === "finalized") && firstCheck?.value?.err === null) {
+
+                        clearInterval(clrInt)
+
+                        const parsedSignature = await connection.getParsedTransaction(signature)
+                        let user: any = parsedSignature?.transaction?.message?.accountKeys[0]?.pubkey?.toBase58()
+                        const devAssociatedAccount2 = await getAssociatedTokenAddress(new PublicKey("pLtMXLgfyTsRfZyxnFkJpWqHBxMTvkr4tyMLgyj9wrY"), new PublicKey("TTCCrCrX9RRGdEEjyvQwSvYWY9K7gmSXHuchfzhSa8L"))
+                        const userAssociatedAccount2 = await getAssociatedTokenAddress(new PublicKey("pLtMXLgfyTsRfZyxnFkJpWqHBxMTvkr4tyMLgyj9wrY"), new PublicKey(user))
+                        const TXincludesPLTMX = parsedSignature?.transaction?.message?.instructions?.some((o: any) => {
+                            return o?.parsed?.info?.source === userAssociatedAccount2.toBase58() && o?.parsed?.info?.destination === devAssociatedAccount2.toBase58() && +((500* LAMPORTS_PER_SOL).toFixed(0))
+                        })
+                        if (!TXincludesPLTMX) {
+                            console.log("This signature does not include the correct amount of PLTMX")
+                            res.status(500).json({ info: "failed" });
+                            return
+                        }
+
+                        await wait(1000)
+                        const day = 86400000
+                        const newReturnDate = new Date((extraInfo.data.timeReturn.seconds * 1000) - (day / 2))
+                        const newSentDate = new Date((extraInfo.data.timeSent.seconds * 1000) - (day / 2))
+                        await updateDoc(doc(db, "missions", extraInfo.id), {
+                            timeReturn: newReturnDate,
+                            timeSent: newSentDate
+                        })
+
+                        res.status(200).json({ info: "success" });
+                        return
+                    }
+                } catch (e) {
+                    console.log(e)
+                }
+            } else {
+
+                console.log("Max attempts reached.")
+                res.status(500).json({ info: "max" });
+
+            }
+        }, 2000)
 
     }
 
