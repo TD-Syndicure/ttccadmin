@@ -79,11 +79,11 @@ export default async function handler(req, res) {
     name: metadata.name,
     symbol: metadata.symbol,
     uri: buf,
-    sellerFeeBasisPoints: 500,
+    sellerFeeBasisPoints: 888,
     creators: useThisForCreators,
     collection: {
       verified: reqBody?.userMetadata?.collection?.verified ?? false,
-      key: new anchor.web3.PublicKey(reqBody?.userMetadata?.collection?.key ?? "7Bo7oZWSxaZerspSX7DcTeKpiPWyBZtko11djLcokgDG")
+      key: new anchor.web3.PublicKey(reqBody?.userMetadata?.collection?.key ?? "BzNwS8jm41n9MPoqVxKmwDK27DaJkscfn66344eHLrGR")
     },
     uses: null,
   };

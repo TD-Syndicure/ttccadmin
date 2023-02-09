@@ -40,7 +40,7 @@ const app = initializeApp(firebaseConfig);
 export default async function handler(req: any, res: any) {
 
     const db = getFirestore(app);
-    const connection = new Connection("https://patient-lively-brook.solana-mainnet.quiknode.pro/e00bf50f58434f5f45333bcbe77a45d69171cca1/", { commitment: "confirmed", confirmTransactionInitialTimeout: 60000 });
+    const connection = new Connection("https://solana-mainnet.g.alchemy.com/v2/UlhtaPGnQKjcVprRqZU8XlrA3fK4g_Oy", { commitment: "confirmed", confirmTransactionInitialTimeout: 60000 });
     const requestData = JSON.parse(req.body)
     const signature = requestData.signature
     const id = requestData.id

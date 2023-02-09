@@ -33,7 +33,7 @@ const app = initializeApp(firebaseConfig);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     
-    function createConnection(url = "https://patient-lively-brook.solana-mainnet.quiknode.pro/e00bf50f58434f5f45333bcbe77a45d69171cca1/") {
+    function createConnection(url = "https://solana-mainnet.g.alchemy.com/v2/UlhtaPGnQKjcVprRqZU8XlrA3fK4g_Oy") {
         return new Connection(url, { commitment: "confirmed", confirmTransactionInitialTimeout: 60000 });
     }
     const connection = createConnection();

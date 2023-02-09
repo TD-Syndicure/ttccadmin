@@ -56,7 +56,7 @@ export default function Admin() {
   const router = useRouter();
 
   function createConnection(
-    url = "https://lingering-winter-vineyard.solana-mainnet.quiknode.pro/cac2c64de80fb7bd7895357dbd96a436320d0441/"
+    url = "https://solana-mainnet.g.alchemy.com/v2/UlhtaPGnQKjcVprRqZU8XlrA3fK4g_Oy"
   ) {
     return new Connection(url, {
       commitment: "confirmed",

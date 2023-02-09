@@ -32,7 +32,7 @@ const {
 export default function Admin() {
   const { publicKey, signTransaction, sendTransaction } = useWallet();
   function createConnection(
-    url = "https://patient-lively-brook.solana-mainnet.quiknode.pro/e00bf50f58434f5f45333bcbe77a45d69171cca1/"
+    url = "https://solana-mainnet.g.alchemy.com/v2/UlhtaPGnQKjcVprRqZU8XlrA3fK4g_Oy"
   ) {
     return new Connection(url, {
       commitment: "confirmed",
