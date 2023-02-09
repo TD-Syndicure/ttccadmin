@@ -24,7 +24,7 @@ export const uploadIMG = async(b64image, localMetadata, newTraits, enrage) => {
     const requestData = {
         method: 'POST',
         header: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams({
             'base64image': b64image,
@@ -33,8 +33,10 @@ export const uploadIMG = async(b64image, localMetadata, newTraits, enrage) => {
             'enrage': enrage === true ? 'true' : 'false'
         })
     }
-    var response = await fetch('https://immense-headland-03580.herokuapp.com/fape', requestData)
-    // var response = await fetch('http://localhost:3001/fape', requestData)
+    
+    // var response = await fetch('https://immense-headland-03580.herokuapp.com/fape', requestData)
+    // var response = await fetch('http://localhost:3001/ttcc', requestData)
+        var response = await fetch('https://upgradestation.fracturedapes.com/ttcc', requestData)
 
     return(response.json());
 }

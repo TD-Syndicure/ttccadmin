@@ -67,16 +67,16 @@ export default function Admin() {
   const { publicKey, signTransaction, sendTransaction } = useWallet();
   const alert = useAlert();
 
-  const authorized = [
-    "CHkSoSiC4ds3N7LkjyonMtdzdoFPZGJ8C9gfen5z2sHN",
-    "Fg3NSQfyzoDxRDSLRJWWVsEWLpPH1UD3FEvRvmzw7BG2",
-    "| TTCCrCrX9RRGdEEjyvQwSvYWY9K7gmSXHuchfzhSa8L",
-    "AAXgTsYU11higadNe4Yxf7mVpAQ51LUpkrziLinaJkr",
-    "3KcjzRD2gEZ8KcynWnvpo6njRPMjMzn4MPaeudTcYjuf",
-    "| TTCCrCrX9RRGdEEjyvQwSvYWY9K7gmSXHuchfzhSa8L",
-    "Hh3dehjrQ7gXiipcewCWnWZZHpW5rA9gwBs7Aosno3B5",
-    "5hopvnJPJpriQVmGuhEoAsAZVh9zK9LxSf7UjMnpPF9",
-  ];
+  // const authorized = [
+  //   "CHkSoSiC4ds3N7LkjyonMtdzdoFPZGJ8C9gfen5z2sHN",
+  //   "Fg3NSQfyzoDxRDSLRJWWVsEWLpPH1UD3FEvRvmzw7BG2",
+  //   "| TTCCrCrX9RRGdEEjyvQwSvYWY9K7gmSXHuchfzhSa8L",
+  //   "AAXgTsYU11higadNe4Yxf7mVpAQ51LUpkrziLinaJkr",
+  //   "3KcjzRD2gEZ8KcynWnvpo6njRPMjMzn4MPaeudTcYjuf",
+  //   "| TTCCrCrX9RRGdEEjyvQwSvYWY9K7gmSXHuchfzhSa8L",
+  //   "Hh3dehjrQ7gXiipcewCWnWZZHpW5rA9gwBs7Aosno3B5",
+  //   "5hopvnJPJpriQVmGuhEoAsAZVh9zK9LxSf7UjMnpPF9",
+  // ];
 
   const [newTrait, setNewTrait]: any = useState();
   const [userMetadata, setUserMetadata]: any = useState();
@@ -458,11 +458,11 @@ export default function Admin() {
         </div>
 
           <div className="adminPanel">
-            {authorized.includes(publicKey?.toBase58()) ? (
+            {/* {authorized.includes(publicKey?.toBase58()) ? ( */}
               <FetchNFT />
-            ) : (
+            {/* ) : (
               <h1>Not authorized.</h1>
-            )}
+            )} */}
           </div>
         </div>
       </div>
