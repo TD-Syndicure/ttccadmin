@@ -999,6 +999,8 @@ button:disabled {
   gap: 5px;
   width: 100%;
   overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .itemBoxInner div {
@@ -1615,6 +1617,8 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 330px;
+  max-height: 330px;
 }
 
 .itemBox {
@@ -1662,6 +1666,8 @@ h2 {
   gap: 5px;
   width: 100%;
   overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .itemBoxInner div {
@@ -4327,6 +4333,8 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 330px;
+  max-height: 330px;
 }
 
 .itemBox {
@@ -4374,6 +4382,8 @@ h2 {
   gap: 5px;
   width: 100%;
   overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .itemBoxInner div {
@@ -4749,6 +4759,23 @@ h2 {
 }
 
 /* THUDS CSS */
+
+#editView .itemBoxInner {
+  height: auto;
+  max-height: none;
+}
+
+/* .itemBoxes .itemBoxInner {
+  height: 330px;
+  max-height: 330px;
+} */
+.itemBoxInner .uploadImage {
+  width: 50%;
+  height: 50px;
+}
+.itemBoxInner .uploadImage img {
+  height: 100%;
+}
 
 .mintNFT {
   display: flex;

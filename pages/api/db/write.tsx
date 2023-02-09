@@ -176,6 +176,7 @@ export default async function handler(
       metadata: extraInfo.metadata,
       hashlist: extraInfo.hashlist,
       available: extraInfo.available,
+      image: extraInfo.image,
     });
     res.status(200).json({ info: "success" });
   } else if (requestedInfo === "deleteTrait") {
@@ -192,6 +193,7 @@ export default async function handler(
       hashlist: extraInfo.hashlist,
       quantity: extraInfo.quantity,
       available: extraInfo.available,
+      image: extraInfo.image,
     });
     res.status(200).json({ info: newTraitDocID.id });
   } else if (requestedInfo === "updateQuantity") {

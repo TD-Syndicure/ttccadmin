@@ -1,23 +1,16 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useAlert } from "react-alert";
 import { useRecoilState } from "recoil";
 import { storeItemsState } from "../scripts/atoms";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { BiImageAdd } from "react-icons/bi";
 import Head from "next/head";
 import { writeAPI } from "../scripts";
 import { programs } from "@metaplex/js";
 import {
-  Connection,
-  Keypair,
-  LAMPORTS_PER_SOL,
-  PublicKey,
-  SystemProgram,
-  Transaction,
-  TransactionInstruction,
+  Connection
 } from "@solana/web3.js";
 import {
   AiOutlineCheck,
@@ -26,32 +19,7 @@ import {
   AiOutlinePlus,
   AiOutlineUpload,
 } from "react-icons/ai";
-import {
-  MintLayout,
-  TOKEN_PROGRAM_ID,
-  createInitializeMintInstruction,
-  getAssociatedTokenAddress,
-  createAssociatedTokenAccountInstruction,
-  getMinimumBalanceForRentExemptMint,
-  createMintToCheckedInstruction,
-  MINT_SIZE,
-  createMint,
-  createMintToInstruction,
-} from "../node_modules/@solana/spl-token";
-import {
-  PROGRAM_ID as MPL_TOKEN_METADATA_PROGRAM_ID,
-  createCreateMasterEditionV3Instruction,
-  createCreateMetadataAccountV2Instruction,
-} from "@metaplex-foundation/mpl-token-metadata";
-import {
-  bundlrStorage,
-  keypairIdentity,
-  Metaplex,
-  toMetaplexFile,
-  toMetaplexFileFromBrowser,
-} from "@metaplex-foundation/js";
-import { bs58 } from "@project-serum/anchor/dist/cjs/utils/bytes";
-import Arweave from "arweave";
+import { wait } from "../scripts/helpers";
 const {
   metadata: { Metadata },
 } = programs;
@@ -137,21 +105,136 @@ export default function Admin() {
       const [costSOL, setCostSOL]: any = useState(item?.data?.costSOL);
       const [quantity, setQuantity]: any = useState(item?.data?.quantity);
       const [available, setAvailable]: any = useState(item?.data?.available);
+      const [file, setFile] = useState<File>();
+      const [file2, setFile2] = useState<File>();
 
       const [edit, setEdit]: any = useState(false);
 
       const editItem = async () => {
+        let imageForMetadata = null;
+        let imageForImageGeneration = null;
+        //converting image to base64
+        let reader = new FileReader();
+        reader.onload = async function () {
+          //@ts-ignore
+          let base64_data = await window.btoa(reader.result!);
+          if (base64_data) {
+            //uploads metadata and image files to arweave
+            alert.removeAll();
+            alert.info("Uploading metadata...");
+            const requestData = {
+              method: "POST",
+              header: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                base64image: base64_data,
+                metadata: null,
+              }),
+            };
+            var response = await fetch(
+              "./api/uploadMetadataForMint",
+              requestData
+            );
+            const res = await response.json();
+            console.log(res);
+            imageForMetadata = res.image;
+          }
+        };
+        if (file) {
+          reader.readAsBinaryString(file);
+          let i = 0;
+          while (1) {
+            console.log("here");
+            i++;
+            await wait(500);
+            if (
+              imageForMetadata !== null &&
+              typeof imageForMetadata === "string"
+            ) {
+              await wait(2000);
+              break;
+            } else if (i === 60) {
+              alert.removeAll();
+              alert.error("Error!");
+              return;
+            }
+          }
+        }
+        //converting image to base64
+        let reader2 = new FileReader();
+        reader2.onload = async function () {
+          //@ts-ignore
+          let base64_data = await window.btoa(reader2.result!);
+          if (base64_data) {
+            //uploads metadata and image files to arweave
+            alert.removeAll();
+            alert.info("Uploading metadata...");
+            const requestData = {
+              method: "POST",
+              header: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                base64image: base64_data,
+                metadata: null,
+              }),
+            };
+            var response = await fetch(
+              "./api/uploadMetadataForMint",
+              requestData
+            );
+            const res = await response.json();
+            console.log(res);
+            imageForImageGeneration = res.image;
+          }
+        };
+        if (file2) {
+          reader2.readAsBinaryString(file2);
+          let i = 0;
+          while (1) {
+            console.log("here");
+            i++;
+            await wait(500);
+            if (
+              imageForImageGeneration !== null &&
+              typeof imageForImageGeneration === "string"
+            ) {
+              console.log(imageForImageGeneration);
+              await wait(2000);
+              break;
+            } else if (i === 60) {
+              alert.removeAll();
+              alert.error("Error!");
+              return;
+            }
+          }
+        }
+
+        let localMetadata = {
+          ...JSON.parse(item?.data?.metadata),
+          image: imageForMetadata ?? JSON.parse(item?.data?.metadata).image,
+          properties: {
+            creators:
+              JSON.parse(item?.data?.metadata)?.properties?.creators ??
+              JSON.parse(item?.data?.metadata)?.creators,
+            files: [
+              {
+                uri: imageForMetadata ?? JSON.parse(item?.data?.metadata).image,
+                type: "image/png",
+              },
+            ],
+          },
+        };
+
         await writeAPI(publicKey?.toBase58()!, "updateTrait", null, {
           costSOL: +costSOL,
           cost: +cost,
-          costMango: +costMango,
-          costJelly: +costJelly,
-          costPuff: +costPuff,
           quantity: quantity,
-          metadata: item?.data?.metadata,
+          metadata: JSON.stringify(localMetadata),
           hashlist: item?.data?.hashlist,
           available: available,
-
+          image: imageForImageGeneration ?? item?.data?.image,
           item: item.id,
         });
         const filteredItems = storeItems.filter((o: any) => {
@@ -162,21 +245,21 @@ export default function Admin() {
           {
             id: item.id,
             data: {
-              costMango: +costMango,
-              costJelly: +costJelly,
-              costPuff: +costPuff,
               cost: +cost,
               costSOL: +costSOL,
-              metadata: item?.data?.metadata,
+              metadata: JSON.stringify(localMetadata),
               hashlist: item?.data?.hashlist,
               quantity: quantity,
               available: available,
+              image: imageForImageGeneration ?? item?.data?.image,
             },
           },
         ]);
         setCost(0);
         setCostSOL(0);
         setEdit(false);
+        alert.removeAll();
+        alert.success("Success!");
       };
 
       const DeleteButton = () => {
@@ -210,11 +293,21 @@ export default function Admin() {
         return (
           <div className="itemBoxes">
             <div id="editView" className="row">
-              <img
-                src={JSON.parse(item.data.metadata).image}
-                height="250"
-                width="250"
-              />
+              <div className="flex relative overflow-hidden">
+                <img
+                  src={JSON.parse(item.data.metadata).image}
+                  height="250"
+                  width="250"
+                  style={{ borderRadius: "6px" }}
+                />
+                <img
+                  src={item.data?.image ?? "/images/placeholder.png"}
+                  height="60"
+                  width="60"
+                  className="absolute bottom-0 right-0 rounded-tl-md"
+                  style={{ boxShadow: "-2px -2px 10px #00000040" }}
+                />
+              </div>
               <div className="itemBoxInner">
                 {/* <div><h1>* Hashlist (JSON Array):</h1><textarea value={hashlist} disabled /></div>
                                 <div><h1>* Metadata (JSON Object):</h1><textarea value={metadata} disabled /></div> */}
@@ -346,6 +439,40 @@ export default function Admin() {
                       checked={available}
                       onChange={(e) => setAvailable(!available)}
                     />
+                  </div>
+                  <div>
+                    <input
+                      id="imgUpload3"
+                      type="file"
+                      style={{ display: "none" }}
+                      onChange={(e) => setFile(e.target.files[0])}
+                    />
+                    <label htmlFor="imgUpload3" className="uploadImage">
+                      {file ? (
+                        <img src={URL.createObjectURL(file)} />
+                      ) : (
+                        <>
+                          <AiOutlineUpload />
+                          <h1>Upload NFT Image</h1>
+                        </>
+                      )}
+                    </label>
+                    <input
+                      id="imgUpload4"
+                      type="file"
+                      style={{ display: "none" }}
+                      onChange={(e) => setFile2(e.target.files[0])}
+                    />
+                    <label htmlFor="imgUpload4" className="uploadImage">
+                      {file2 ? (
+                        <img src={URL.createObjectURL(file2)} />
+                      ) : (
+                        <>
+                          <AiOutlineUpload />
+                          <h1>Upload Image Used For Generation</h1>
+                        </>
+                      )}
+                    </label>
                   </div>
                 </div>
               </div>
@@ -866,16 +993,6 @@ export default function Admin() {
                   );
                   const res2 = await response2.json();
 
-                  //construct json
-                  let localMetadata = {
-                    ...metadataToUpload,
-                    image: res2.image,
-                    properties: {
-                      creators: metadataToUpload.properties.creators,
-                      files: [{ uri: res2.image, type: "image/png" }],
-                    },
-                  };
-
                   console.log(nftsMinted);
                   //writes new traits to database
                   const newTraitDocID = await writeAPI(
@@ -888,8 +1005,9 @@ export default function Admin() {
                       costMango: +costMango,
                       costJelly: +costJelly,
                       costPuff: +costPuff,
-                      metadata: JSON.stringify(localMetadata),
+                      metadata: JSON.stringify(metadataToUpload),
                       hashlist: JSON.stringify(nftsMinted),
+                      image: res2.image,
                       quantity: quantity,
                       available: available,
                     }
@@ -905,8 +1023,9 @@ export default function Admin() {
                           costMango: +costMango,
                           costJelly: +costJelly,
                           costPuff: +costPuff,
-                          metadata: JSON.stringify(localMetadata),
+                          metadata: JSON.stringify(metadataToUpload),
                           hashlist: JSON.stringify(nftsMinted),
+                          image: res2.image,
                           quantity: quantity,
                           available: available,
                         },
@@ -944,6 +1063,7 @@ export default function Admin() {
                   costPuff: +costPuff,
                   metadata: JSON.stringify(localMetadata),
                   hashlist: JSON.stringify(nftsMinted),
+                  image: res.image,
                   quantity: quantity,
                   available: available,
                 }
@@ -961,6 +1081,7 @@ export default function Admin() {
                       costPuff: +costPuff,
                       metadata: JSON.stringify(localMetadata),
                       hashlist: JSON.stringify(nftsMinted),
+                      image: res.image,
                       quantity: quantity,
                       available: available,
                     },
@@ -990,7 +1111,7 @@ export default function Admin() {
               ) : (
                 <>
                   <AiOutlineUpload />
-                  <h1>Upload NFT Image</h1>
+                  <h1>Upload NFT Store Image</h1>
                 </>
               )}
             </label>
@@ -1006,7 +1127,7 @@ export default function Admin() {
               ) : (
                 <>
                   <AiOutlineUpload />
-                  <h1>Upload Store Image (optional)</h1>
+                  <h1>Upload Image Used For Generation</h1>
                 </>
               )}
             </label>
