@@ -9,9 +9,7 @@ import axios from "axios";
 import Head from "next/head";
 import { writeAPI } from "../scripts";
 import { programs } from "@metaplex/js";
-import {
-  Connection
-} from "@solana/web3.js";
+import { Connection } from "@solana/web3.js";
 import {
   AiOutlineCheck,
   AiOutlineEdit,
@@ -1172,6 +1170,16 @@ export default function Admin() {
                 onChange={(e) => setCollection(e.target.value)}
               />
             </div>
+            <div>
+            <h1>Collection Address</h1>
+            <ul>
+              <li className="text-white">Chimps:</li>
+              <li className="text-white">Time Devices:</li>
+              <li className="text-white">Lost Chimps:</li>
+              <li className="text-white">Toybox: 8MguWvQQrqi2nqF2vLQGTMzoYjK9xSen8oqxPUQ89Jw6</li>
+              <li className="text-white">Sci-Fi: </li>
+            </ul>
+          </div>
             <div className="inputRow">
               <h1>Description</h1>
               <textarea
@@ -1327,7 +1335,6 @@ export default function Admin() {
             Mint New Item To the store
           </h1>
           <AddItem />
-
           <h1 style={{ color: "#fff" }} className="traitTitle">
             Edit Items
           </h1>
