@@ -5,7 +5,7 @@ import Arweave from "arweave";
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: "20mb", // Set desired value here
+      sizeLimit: "100mb", // Set desired value here
     },
   },
 };
