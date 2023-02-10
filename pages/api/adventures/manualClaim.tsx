@@ -49,12 +49,12 @@ import {
 } from "@metaplex-foundation/mpl-token-metadata";
 
 const firebaseConfig = {
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  projectId: process.env.PROJECT_ID,
-  storageBucket: process.env.STORAGE_BUCKET,
-  messagingSenderId: process.env.MESSAGING_SENDER_ID,
-  appId: process.env.APP_ID,
+  apiKey: process.env.ADV_API_KEY,
+  authDomain: process.env.ADV_AUTH_DOMAIN,
+  projectId: process.env.ADV_PROJECT_ID,
+  storageBucket: process.env.ADV_STORAGE_BUCKET,
+  messagingSenderId: process.env.ADV_MESSAGING_SENDER_ID,
+  appId: process.env.ADV_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -92,14 +92,19 @@ export default async function handler(req: any, res: any) {
   const db = getFirestore(app);
   const requestData = JSON.parse(req.body);
   const devkeyPair = Keypair.fromSecretKey(
-    bs58.decode(process.env.USERNAME_ENCRYPT!)
+    bs58.decode(process.env.ADV_ENCRYPT!)
   );
-  const escrowKeyPair = Keypair.fromSecretKey(bs58.decode(process.env.ESCROW!));
+  const escrowKeyPair = Keypair.fromSecretKey(
+    bs58.decode(process.env.ADV_ESCROW!)
+  );
+
+  console.log("requestData", requestData);
+  console.log("requestData", requestData.missionInfo);
 
   const mission = requestData.mission;
-
+  console.log(mission);
   const connection = new Connection(
-    "https://lingering-winter-vineyard.solana-mainnet.quiknode.pro/cac2c64de80fb7bd7895357dbd96a436320d0441/",
+    "https://patient-lively-brook.solana-mainnet.quiknode.pro/e00bf50f58434f5f45333bcbe77a45d69171cca1/",
     { commitment: "confirmed", confirmTransactionInitialTimeout: 60000 }
   );
 
@@ -468,7 +473,7 @@ export default async function handler(req: any, res: any) {
               associatedDestinationTokenAddr,
               devkeyPair.publicKey,
               +(+(
-                +requestData.missionInfo.items["tokens"].number *
+                +requestData?.missionInfo?.items["tokens"].number *
                 LAMPORTS_PER_SOL
               ).toFixed(0))
             )
@@ -746,6 +751,7 @@ export default async function handler(req: any, res: any) {
         updatedAttributes.push(o);
       }
     });
+
     if (
       !metadataUpdated?.attributes?.some((o: any) => o.trait_type === "Role")
     ) {
@@ -772,7 +778,7 @@ export default async function handler(req: any, res: any) {
 
     const newMetadataURL = await updateAdventureCount(updatedMetadata);
 
-    const keypair = Keypair.fromSecretKey(bs58.decode(process.env.ESCROW!));
+    const keypair = Keypair.fromSecretKey(bs58.decode(process.env.ADV_ESCROW!));
     const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
       "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
     );

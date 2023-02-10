@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
   const connection = new Connection(
     "https://lingering-winter-vineyard.solana-mainnet.quiknode.pro/cac2c64de80fb7bd7895357dbd96a436320d0441/",
-    { commitment: "processed", confirmTransactionInitialTimeout: 60000 }
+    { commitment: "finalized", confirmTransactionInitialTimeout: 60000 }
   );
 
   const reqBody = JSON.parse(req.body);

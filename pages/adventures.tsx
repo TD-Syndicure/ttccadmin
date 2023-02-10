@@ -489,7 +489,7 @@ export default function Admin() {
               day(s)
             </h3>
             <h3>
-              LORE: <textarea onChange={(e) => setLore(e.target.value)} />
+              LORE: <textarea className="text-black" onChange={(e) => setLore(e.target.value)} />
             </h3>
             <h3>
               Traits Rewards Hashlist:{" "}
