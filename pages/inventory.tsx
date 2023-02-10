@@ -27,7 +27,7 @@ import styles from "../styles/Home.module.css";
 export default function Admin() {
   const { publicKey, signTransaction, sendTransaction } = useWallet();
   const connection = new Connection(
-    "https://solana-mainnet.g.alchemy.com/v2/UlhtaPGnQKjcVprRqZU8XlrA3fK4g_Oy",
+    "https://lingering-winter-vineyard.solana-mainnet.quiknode.pro/cac2c64de80fb7bd7895357dbd96a436320d0441/",
     { commitment: "processed", confirmTransactionInitialTimeout: 60000 }
   );
   const alert = useAlert();
@@ -668,6 +668,7 @@ export default function Admin() {
       const [name, setName] = useState<string>("");
       const [symbol, setSymbol] = useState<string>("");
       const [royalties, setRoyalties] = useState<number>(0);
+      const [collection, setCollection] = useState<string>("");
       const [description, setDescription] = useState<string>("");
       const [attributes, setAttributes] = useState<
         { trait_type: string; value: string }[]
@@ -954,6 +955,7 @@ export default function Admin() {
               body: JSON.stringify({
                 metadata: metadataToUpload,
                 uri: res.json,
+                collection: collection,
               }),
             };
             let nftsMinted: string[] = [];
@@ -1159,6 +1161,15 @@ export default function Admin() {
                 min={0}
                 placeholder="Royalty % (Max 50%)"
                 onChange={(e) => setRoyalties(+e.target.value)}
+              />
+            </div>
+            <div className="inputRow">
+              <h1>Collection</h1>
+              <input
+                type="text"
+                value={collection}
+                placeholder="Collection Address"
+                onChange={(e) => setCollection(e.target.value)}
               />
             </div>
             <div className="inputRow">

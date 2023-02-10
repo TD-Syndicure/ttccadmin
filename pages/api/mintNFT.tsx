@@ -16,13 +16,14 @@ export const config = {
 export default async function handler(req, res) {
 
   const connection = new Connection(
-    "https://solana-mainnet.g.alchemy.com/v2/UlhtaPGnQKjcVprRqZU8XlrA3fK4g_Oy",
+    "https://lingering-winter-vineyard.solana-mainnet.quiknode.pro/cac2c64de80fb7bd7895357dbd96a436320d0441/",
     { commitment: "processed", confirmTransactionInitialTimeout: 60000 }
   );
 
   const reqBody = JSON.parse(req.body);
   const metadata = reqBody.metadata
   const uri = reqBody.uri
+  const collection = reqBody.collection
 
   //setting up metaplex
   const keypair = Keypair.fromSecretKey(bs58.decode(process.env.TRAITS_STORE_ENCRYPT!));
@@ -35,7 +36,7 @@ export default async function handler(req, res) {
     symbol: metadata.symbol,
     uri: uri,
     sellerFeeBasisPoints: metadata.seller_fee_basis_points,
-    collection: new PublicKey("4TTf6hMf6NPsQFUfwNT957WgCC8pDpSGWxUycf3aivCP"),
+    collection: new PublicKey(collection),
     collectionAuthority: keypair,
   });
 

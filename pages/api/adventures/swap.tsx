@@ -34,7 +34,7 @@ export default async function handler(req: any, res: any) {
   console.log("amount: " + timeDevices);
 
   const connection = new Connection(
-    "https://solana-mainnet.g.alchemy.com/v2/UlhtaPGnQKjcVprRqZU8XlrA3fK4g_Oy",
+    "https://lingering-winter-vineyard.solana-mainnet.quiknode.pro/cac2c64de80fb7bd7895357dbd96a436320d0441/",
     { commitment: "confirmed", confirmTransactionInitialTimeout: 60000 }
   );
 
