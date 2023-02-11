@@ -130,10 +130,7 @@ export default function Admin() {
                 metadata: null,
               }),
             };
-            var response = await fetch(
-              "./api/uploadMetadataForMint",
-              requestData
-            );
+            var response = await fetch("https://upgradestation.fracturedapes.com/uploadMetadataForMint", requestData);
             const res = await response.json();
             console.log(res);
             imageForMetadata = res.image;
@@ -173,15 +170,9 @@ export default function Admin() {
               header: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({
-                base64image: base64_data,
-                metadata: null,
-              }),
+              body: JSON.stringify({ base64image: base64_data, metadata: null }),
             };
-            var response = await fetch(
-              "./api/uploadMetadataForMint",
-              requestData
-            );
+            var response = await fetch("./api/uploadMetadataForMint", requestData);
             const res = await response.json();
             console.log(res);
             imageForImageGeneration = res.image;
@@ -932,15 +923,12 @@ export default function Admin() {
               header: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({
-                base64image: base64_data,
-                metadata: metadataToUpload,
-              }),
-            };
-            var response = await fetch(
-              "./api/uploadMetadataForMint",
-              requestData
-            );
+              body: new URLSearchParams({
+                'base64image': base64_data,
+                'metadata': JSON.stringify(metadataToUpload)
+              })
+            }
+            var response = await fetch("https://upgradestation.fracturedapes.com/uploadMetadataForMint", requestData);
             const res = await response.json();
             console.log(res);
 
@@ -982,15 +970,12 @@ export default function Admin() {
                     header: {
                       "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({
-                      base64image: base64_data2,
-                      metadata: null,
-                    }),
-                  };
-                  var response2 = await fetch(
-                    "./api/uploadMetadataForMint",
-                    requestData2
-                  );
+                    body: new URLSearchParams({
+                      'base64image': base64_data,
+                      'metadata': JSON.stringify(null)
+                    })
+                  }
+                  var response2 = await fetch("https://upgradestation.fracturedapes.com/uploadMetadataForMint", requestData2);
                   const res2 = await response2.json();
 
                   console.log(nftsMinted);
