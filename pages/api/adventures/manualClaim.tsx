@@ -734,10 +734,9 @@ export default async function handler(req: any, res: any) {
     }
 
     //UPLOAD NEW METADATA URL========================================================================================================================================
-    const task = metaplex
-      .nfts()
-      .findByMint({ mintAddress: new PublicKey(nftToClaim) });
-    const nftData = await task.run();
+
+      const nftData = await metaplex.nfts().findByMint({ mintAddress: nftToClaim });
+
     const metadataUpdated = nftData.json;
 
     const updatedAttributes = [];
