@@ -1,9 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-import { bundlrStorage, keypairIdentity, Metaplex } from "@metaplex-foundation/js";
+import {
+  bundlrStorage,
+  keypairIdentity,
+  Metaplex,
+} from "@metaplex-foundation/js";
 import { bs58 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
-import Arweave from "arweave";
+import { wait } from "../../scripts/helpers"
 
 export const config = {
   api: {
@@ -14,24 +18,25 @@ export const config = {
 };
 
 export default async function handler(req, res) {
-
   const connection = new Connection(
     "https://lingering-winter-vineyard.solana-mainnet.quiknode.pro/cac2c64de80fb7bd7895357dbd96a436320d0441/",
     { commitment: "finalized", confirmTransactionInitialTimeout: 60000 }
   );
 
   const reqBody = JSON.parse(req.body);
-  const metadata = reqBody.metadata
-  const uri = reqBody.uri
-  const collection = reqBody.collection
+  const metadata = reqBody.metadata;
+  const uri = reqBody.uri;
+  const collection = reqBody.collection;
 
   //setting up metaplex
-  const keypair = Keypair.fromSecretKey(bs58.decode(process.env.TRAITS_STORE_ENCRYPT!));
+  const keypair = Keypair.fromSecretKey(
+    bs58.decode(process.env.TRAITS_STORE_ENCRYPT!)
+  );
   const metaplex = Metaplex.make(connection)
     .use(keypairIdentity(keypair))
     .use(bundlrStorage());
 
-  const mintNFTResponse = metaplex.nfts().create({
+  const { nft } = await metaplex.nfts().create({
     name: metadata.name,
     symbol: metadata.symbol,
     uri: uri,
@@ -40,11 +45,11 @@ export default async function handler(req, res) {
     collectionAuthority: keypair,
   });
 
-  const doneNFT = await mintNFTResponse.run()
+await wait(10000)
 
-  if (doneNFT) {
-    res.json({ mint: doneNFT?.mintAddress?.toBase58() });
+  if (nft) {
+    res.json({ mint: nft?.address?.toBase58() });
   } else {
-    res.json({ mint: "failed"})
+    res.json({ mint: "failed" });
   }
 }

@@ -1,10 +1,8 @@
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { useState, useEffect } from "react";
 import { generateDownload } from "../scripts/cropImage";
 import { useAlert } from "react-alert";
-import axios from "axios";
 import {
   uploadIMG,
   uploadJSON,
@@ -12,15 +10,6 @@ import {
   adminUpdate,
   toDataURL,
 } from "../scripts";
-//const Wallet = require('@project-serum/anchor')
-import * as anchor from "@project-serum/anchor";
-import {
-  createUpdateMetadataAccountV2Instruction,
-  DataV2,
-  UpdateMetadataAccountV2InstructionArgs,
-  UpdateMetadataAccountV2InstructionAccounts,
-} from "@metaplex-foundation/mpl-token-metadata";
-// import { Metaplex } from "@metaplex-foundation/js";
 import web3, {
   Keypair,
   Transaction,
@@ -31,25 +20,14 @@ import web3, {
   sendAndConfirmTransaction,
   PublicKey,
 } from "@solana/web3.js";
-import bs58 from "bs58";
-import { MdVolumeOff, MdVolumeUp } from "react-icons/md";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import Marquee from "react-fast-marquee";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   loadingState,
   storeItemsState,
-  userNFTsState,
-  userTraitsState,
-  videoPlayingState,
 } from "../scripts/atoms";
 import { Router, useRouter } from "next/router";
-import {
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-  Token,
-  TOKEN_PROGRAM_ID,
-} from "@solana/spl-token";
 import { Metaplex } from "@metaplex-foundation/js";
 
 export default function Admin() {
@@ -331,8 +309,7 @@ export default function Admin() {
           setFindingNFT(true);
           const mint: any = new PublicKey(address);
 
-          const task = metaplex.nfts().findByMint({ mintAddress: mint });
-          const nftData = await task.run();
+          const nftData = await metaplex.nfts().findByMint({ mintAddress: mint });
 
           // console.log(nftData)
 

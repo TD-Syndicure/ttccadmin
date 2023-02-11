@@ -1,7 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-import Arweave from 'arweave';
-import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as anchor from "@project-serum/anchor";
 import {
   createUpdateMetadataAccountV2Instruction,
@@ -9,17 +7,6 @@ import {
   UpdateMetadataAccountV2InstructionArgs,
   UpdateMetadataAccountV2InstructionAccounts
 } from "@metaplex-foundation/mpl-token-metadata";
-// import { Metaplex } from "@metaplex-foundation/js";
-import web3, {
-  Keypair,
-  Transaction,
-  LAMPORTS_PER_SOL,
-  SystemProgram,
-  Connection,
-  clusterApiUrl,
-  sendAndConfirmTransaction,
-  PublicKey
-} from "@solana/web3.js";
 import bs58 from "bs58"
 // import { createAssociatedTokenAccountInstruction, createTransferInstruction, getAssociatedTokenAddress } from '../../node_modules/@solana/spl-token';
 

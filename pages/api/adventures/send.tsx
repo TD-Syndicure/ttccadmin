@@ -695,13 +695,10 @@ export default async function handler(req: any, res: any) {
 
       if (possibleTrait && possibleChimp) {
         const mint: any = new PublicKey(possibleTrait);
-        const task = metaplex.nfts().findByMint({ mintAddress: mint });
-        const traitData = await task.run();
+        const traitData = await metaplex.nfts().findByMint({ mintAddress: mint });
 
         const mint2: any = new PublicKey(possibleChimp);
-        const task2 = metaplex.nfts().findByMint({ mintAddress: mint2 });
-        const chimpData = await task2.run();
-        res.status(200).json({
+        const chimpData = await metaplex.nfts().findByMint({ mintAddress: mint2 });        res.status(200).json({
           info: transaction.serialize({ requireAllSignatures: false }),
           result: handleResult(),
           traitData: traitData.json,
@@ -710,8 +707,7 @@ export default async function handler(req: any, res: any) {
         });
       } else if (possibleChimp && !possibleTrait) {
         const mint2: any = new PublicKey(possibleChimp);
-        const task2 = metaplex.nfts().findByMint({ mintAddress: mint2 });
-        const chimpData = await task2.run();
+        const chimpData = await metaplex.nfts().findByMint({ mintAddress: mint2 });
         res.status(200).json({
           info: transaction.serialize({ requireAllSignatures: false }),
           result: handleResult(),
@@ -721,8 +717,7 @@ export default async function handler(req: any, res: any) {
         });
       } else if (possibleTrait && !possibleChimp) {
         const mint: any = new PublicKey(possibleTrait);
-        const task = metaplex.nfts().findByMint({ mintAddress: mint });
-        const traitData = await task.run();
+        const traitData = await metaplex.nfts().findByMint({ mintAddress: mint });
         res.status(200).json({
           info: transaction.serialize({ requireAllSignatures: false }),
           result: handleResult(),

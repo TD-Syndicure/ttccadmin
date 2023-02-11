@@ -120,7 +120,7 @@ export default function Admin() {
               console.log(nft);
               const mint: any = new PublicKey(nft);
               const task = metaplex.nfts().findByMint({ mintAddress: mint });
-              const nftData = await task.run();
+              const nftData = await metaplex.nfts().findByMint({ mintAddress: mint });
               if (nftData) {
                 setNFTMetadata(nftData.json);
               }
@@ -136,7 +136,7 @@ export default function Admin() {
             if (nftAI != undefined) {
               const mint: any = new PublicKey(nftAI);
               const task = metaplex.nfts().findByMint({ mintAddress: mint });
-              const nftData = await task.run();
+              const nftData = await metaplex.nfts().findByMint({ mintAddress: mint });
               if (nftData) {
                 setNFTAIMetadata(nftData.json);
               }
