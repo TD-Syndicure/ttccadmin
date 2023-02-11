@@ -941,7 +941,20 @@ export default function Admin() {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                metadata: metadataToUpload,
+                metadata: {
+                  ...metadataToUpload,
+                  image: res.image,
+                  properties: {
+                    files: [
+                      {
+                        uri: res.image,
+                        type: "image/png",
+                      },
+                    ],
+                    creators: creators,
+                    category: "image",
+                  },
+                },
                 uri: res.json,
                 collection: collection,
               }),
@@ -992,7 +1005,20 @@ export default function Admin() {
                       costMango: +costMango,
                       costJelly: +costJelly,
                       costPuff: +costPuff,
-                      metadata: JSON.stringify(metadataToUpload),
+                      metadata: JSON.stringify({
+                        ...metadataToUpload,
+                        image: res.image,
+                        properties: {
+                          files: [
+                            {
+                              uri: res.image,
+                              type: "image/png",
+                            },
+                          ],
+                          creators: creators,
+                          category: "image",
+                        },
+                      }),
                       hashlist: JSON.stringify(nftsMinted),
                       image: res2.image,
                       quantity: quantity,
@@ -1010,7 +1036,20 @@ export default function Admin() {
                           costMango: +costMango,
                           costJelly: +costJelly,
                           costPuff: +costPuff,
-                          metadata: JSON.stringify(metadataToUpload),
+                          metadata: JSON.stringify({
+                            ...metadataToUpload,
+                            image: res.image,
+                            properties: {
+                              files: [
+                                {
+                                  uri: res.image,
+                                  type: "image/png",
+                                },
+                              ],
+                              creators: creators,
+                              category: "image",
+                            },
+                          }),
                           hashlist: JSON.stringify(nftsMinted),
                           image: res2.image,
                           quantity: quantity,

@@ -7,7 +7,7 @@ import {
 } from "@metaplex-foundation/js";
 import { bs58 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
-import { wait } from "../../scripts/helpers"
+import { wait } from "../../scripts/helpers";
 
 export const config = {
   api: {
@@ -36,16 +36,25 @@ export default async function handler(req, res) {
     .use(keypairIdentity(keypair))
     .use(bundlrStorage());
 
-  const { nft } = await metaplex.nfts().create({
-    name: metadata.name,
-    symbol: metadata.symbol,
-    uri: uri,
-    sellerFeeBasisPoints: metadata.seller_fee_basis_points,
-    collection: new PublicKey(collection),
-    collectionAuthority: keypair,
-  });
+  const { nft } = await metaplex.nfts().create(
+    {
+      name: metadata.name,
+      symbol: metadata.symbol,
+      uri: uri,
+      sellerFeeBasisPoints: metadata.seller_fee_basis_points,
+      collection: new PublicKey(collection),
+      collectionAuthority: keypair,
+    },
+    {
+      commitment: "confirmed",
+      confirmOptions: {
+        maxRetries: 10,
+        commitment: "confirmed",
+      },
+    }
+  );
 
-await wait(10000)
+  await wait(10000);
 
   if (nft) {
     res.json({ mint: nft?.address?.toBase58() });
