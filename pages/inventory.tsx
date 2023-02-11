@@ -526,6 +526,7 @@ export default function Admin() {
             hashlist: hashlist,
             quantity: quantity,
             available: available,
+            image: null
           }
         );
 
@@ -544,6 +545,7 @@ export default function Admin() {
                 hashlist: hashlist,
                 quantity: quantity,
                 available: available,
+                image: null
               },
             },
           ]);
