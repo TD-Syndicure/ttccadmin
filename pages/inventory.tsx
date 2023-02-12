@@ -960,6 +960,7 @@ export default function Admin() {
               }),
             };
             let nftsMinted: string[] = [];
+            console.log(nftsMinted)
             for (let i = 0; i < quantity; i++) {
               alert.removeAll();
               alert.info(`Minting NFT #${i + 1}/${quantity}`);
@@ -967,6 +968,17 @@ export default function Admin() {
               const res2 = await response2.json();
               if (res2.mint !== "failed") {
                 nftsMinted.push(res2.mint);
+              } else if (res2.mint === "failed") {
+                alert.removeAll();
+                alert.info("Failed to read a mint address, retrying the remaining balance...");
+                await wait(2000);
+                alert.removeAll();
+                alert.info(`Minting NFT #${i - nftsMinted?.length + 1}/${quantity}`);
+                var response2 = await fetch("./api/mintNFT", requestData2);
+                const res2 = await response2.json();
+                if (res2.mint !== "failed") {
+                  nftsMinted.push(res2.mint);
+                }
               }
             }
 

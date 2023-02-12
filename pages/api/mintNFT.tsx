@@ -20,7 +20,7 @@ export const config = {
 export default async function handler(req, res) {
   const connection = new Connection(
     "https://lingering-winter-vineyard.solana-mainnet.quiknode.pro/cac2c64de80fb7bd7895357dbd96a436320d0441/",
-    { commitment: "finalized", confirmTransactionInitialTimeout: 60000 }
+    { commitment: "confirmed", confirmTransactionInitialTimeout: 60000 }
   );
 
   const reqBody = JSON.parse(req.body);
@@ -36,29 +36,35 @@ export default async function handler(req, res) {
     .use(keypairIdentity(keypair))
     .use(bundlrStorage());
 
-  const { nft } = await metaplex.nfts().create(
-    {
-      name: metadata.name,
-      symbol: metadata.symbol,
-      uri: uri,
-      sellerFeeBasisPoints: metadata.seller_fee_basis_points,
-      collection: new PublicKey(collection),
-      collectionAuthority: keypair,
-    },
-    {
-      commitment: "confirmed",
-      confirmOptions: {
-        maxRetries: 10,
-        commitment: "confirmed",
-      },
+  try {
+    const transactionBuilder = await metaplex
+      .nfts()
+      .builders()
+      .create({
+        name: metadata.name,
+        symbol: metadata.symbol,
+        uri: uri,
+        sellerFeeBasisPoints: metadata.seller_fee_basis_points,
+        collection: new PublicKey(collection),
+        collectionAuthority: keypair,
+      });
+
+    const { mintAddress } = transactionBuilder.getContext();
+    await metaplex.rpc().sendAndConfirmTransaction(transactionBuilder);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const nft = await metaplex.nfts().findByMint({ mintAddress });
+
+    if (nft) {
+      res.json({ mint: nft?.address?.toBase58() });
+    } else {
+      console.log('retrying checks for mint address')
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const nft = await metaplex.nfts().findByMint({ mintAddress });
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      res.json({ mint: nft?.address?.toBase58() });
     }
-  );
-
-  await wait(10000);
-
-  if (nft) {
-    res.json({ mint: nft?.address?.toBase58() });
-  } else {
+  } catch (error) {
+    console.log(error);
     res.json({ mint: "failed" });
   }
 }
