@@ -1199,11 +1199,11 @@ export default function Admin() {
             <div>
             <h1>Collection Address</h1>
             <ul>
-              <li className="text-white">Chimps:</li>
-              <li className="text-white">Time Devices:</li>
+              <li className="text-white">Chimps: BzNwS8jm41n9MPoqVxKmwDK27DaJkscfn66344eHLrGR</li>
+              <li className="text-white">Time Devices: 9WYY1hsAgujj8jMHnmPbjAqHjnBXrMFETpBTgrhKSh1y</li>
               <li className="text-white">Lost Chimps:</li>
               <li className="text-white">Toybox: 8MguWvQQrqi2nqF2vLQGTMzoYjK9xSen8oqxPUQ89Jw6</li>
-              <li className="text-white">Sci-Fi: </li>
+              <li className="text-white">Sci-Fi: 4TTf6hMf6NPsQFUfwNT957WgCC8pDpSGWxUycf3aivCP</li>
             </ul>
           </div>
             <div className="inputRow">
