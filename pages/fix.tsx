@@ -109,7 +109,7 @@ export default function Admin() {
                   attributeType.trait_type === "Eye Wear"
                 ) {
                   await toDataURL(
-                    `/attributes/ttcc/${encodeURI("Eyewear")}/${encodeURI(
+                    `/attributes/ttcc/${encodeURI("Eye Wear")}/${encodeURI(
                       attributeType.value
                     )}.png`,
                     function (dataUrl) {
@@ -146,7 +146,7 @@ export default function Admin() {
                 attributeType.trait_type === "Eye Wear"
               ) {
                 await toDataURL(
-                  `/attributes/ttcc/${encodeURI("Eyewear")}/${encodeURI(
+                  `/attributes/ttcc/${encodeURI("Eye Wear")}/${encodeURI(
                     attributeType.value
                   )}.png`,
                   function (dataUrl) {
@@ -185,12 +185,9 @@ export default function Admin() {
                 ).attributes[0].value.toLowerCase() ===
                   attributeType.value.toLowerCase()
               ) {
-                await toDataURL(
-                  JSON.parse(item.data.metadata).image,
-                  function (dataUrl) {
-                    currentImageArray.push(dataUrl);
-                  }
-                );
+                await toDataURL(item.data.image, function (dataUrl) {
+                  currentImageArray.push(dataUrl);
+                });
               }
             }
           }
@@ -204,7 +201,6 @@ export default function Admin() {
         // console.log("RAN THIS HERE!")
       });
     };
-
     if (userMetadata) {
       const enraged = userMetadata.metadata.attributes.some((o: any) => {
         if (
@@ -215,7 +211,7 @@ export default function Admin() {
         }
       });
       setLoadingNewNFT(true);
-      renderUpdatedImage(enraged ? "enraged" : "fractured");
+      renderUpdatedImage(enraged ? "enraged" : "ttcc");
     }
   }, [userMetadata]);
 
