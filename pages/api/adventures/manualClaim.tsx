@@ -49,12 +49,12 @@ import {
 } from "@metaplex-foundation/mpl-token-metadata";
 
 const firebaseConfig = {
-  apiKey: process.env.ADV_API_KEY,
-  authDomain: process.env.ADV_AUTH_DOMAIN,
-  projectId: process.env.ADV_PROJECT_ID,
-  storageBucket: process.env.ADV_STORAGE_BUCKET,
-  messagingSenderId: process.env.ADV_MESSAGING_SENDER_ID,
-  appId: process.env.ADV_APP_ID,
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -92,17 +92,12 @@ export default async function handler(req: any, res: any) {
   const db = getFirestore(app);
   const requestData = JSON.parse(req.body);
   const devkeyPair = Keypair.fromSecretKey(
-    bs58.decode(process.env.ADV_ENCRYPT!)
+    bs58.decode(process.env.USERNAME_ENCRYPT!)
   );
-  const escrowKeyPair = Keypair.fromSecretKey(
-    bs58.decode(process.env.ADV_ESCROW!)
-  );
-
-  console.log("requestData", requestData);
-  console.log("requestData", requestData.missionInfo);
+  const escrowKeyPair = Keypair.fromSecretKey(bs58.decode(process.env.ESCROW!));
 
   const mission = requestData.mission;
-  console.log(mission);
+
   const connection = new Connection(
     "https://patient-lively-brook.solana-mainnet.quiknode.pro/e00bf50f58434f5f45333bcbe77a45d69171cca1/",
     { commitment: "confirmed", confirmTransactionInitialTimeout: 60000 }
@@ -194,7 +189,7 @@ export default async function handler(req: any, res: any) {
       );
     if (!TXincludesNFT2) {
       console.log("This signature does not include the correct NFT.");
-      res.status(500).json({ info: "failed" });
+      res.status(500).json({ info: "failed", error: "error 1" });
       return;
     }
 
@@ -215,7 +210,7 @@ export default async function handler(req: any, res: any) {
       //will fail if they did not send the sol fee
       if (!TXincludesSOLPayment) {
         console.log("Did not pay the fee");
-        res.status(500).json({ info: "failed" });
+        res.status(500).json({ info: "failed", error: "error 2" });
         return;
       }
     }
@@ -248,7 +243,7 @@ export default async function handler(req: any, res: any) {
       //will fail if they did not send the token fee
       if (!TXincludesTokenPayment) {
         console.log("Did not pay the fee");
-        res.status(500).json({ info: "failed" });
+        res.status(500).json({ info: "failed", error: "error 3" });
         return;
       }
     }
@@ -277,7 +272,7 @@ export default async function handler(req: any, res: any) {
       //will fail if they did not send the token fee
       if (!TXincludesSidekickPayment) {
         console.log("Did not pay the sidekick");
-        res.status(500).json({ info: "failed" });
+        res.status(500).json({ info: "failed", error: "error 4" });
         return;
       }
     }
@@ -306,7 +301,7 @@ export default async function handler(req: any, res: any) {
       //will fail if they did not send the token fee
       if (!TXincludesNFTPayment) {
         console.log("Did not pay the NFT");
-        res.status(500).json({ info: "failed" });
+        res.status(500).json({ info: "failed", error: "error 5" });
         return;
       }
     }
@@ -319,7 +314,7 @@ export default async function handler(req: any, res: any) {
       )
     ) {
       console.log("Doesn't exist");
-      res.status(500).json({ info: "failed" });
+      res.status(500).json({ info: "failed", error: "error 6" });
       return;
     }
   }
@@ -411,7 +406,9 @@ export default async function handler(req: any, res: any) {
           SystemProgram.transfer({
             fromPubkey: devkeyPair.publicKey,
             toPubkey: user,
-            lamports: databaseDoc.data()?.result.number * LAMPORTS_PER_SOL,
+            lamports: +(
+              databaseDoc.data()?.result.number * LAMPORTS_PER_SOL
+            ).toFixed(0),
           })
         );
       } else if (databaseDoc.data()?.result.item === "nft") {
@@ -473,8 +470,7 @@ export default async function handler(req: any, res: any) {
               associatedDestinationTokenAddr,
               devkeyPair.publicKey,
               +(+(
-                +requestData?.missionInfo?.items["tokens"].number *
-                LAMPORTS_PER_SOL
+                +adminMission?.data()?.items["tokens"].number * LAMPORTS_PER_SOL
               ).toFixed(0))
             )
           );
@@ -484,7 +480,7 @@ export default async function handler(req: any, res: any) {
           SystemProgram.transfer({
             fromPubkey: devkeyPair.publicKey,
             toPubkey: user,
-            lamports: 0.00001 * LAMPORTS_PER_SOL,
+            lamports: +(0.00001 * LAMPORTS_PER_SOL).toFixed(0),
           })
         );
         console.log("user received nothing!");
@@ -547,8 +543,7 @@ export default async function handler(req: any, res: any) {
               associatedDestinationTokenAddr,
               devkeyPair.publicKey,
               +(+(
-                +requestData.missionInfo.items["tokens"].number *
-                LAMPORTS_PER_SOL
+                +adminMission?.data()?.items["tokens"].number * LAMPORTS_PER_SOL
               ).toFixed(0))
             )
           );
@@ -734,9 +729,10 @@ export default async function handler(req: any, res: any) {
     }
 
     //UPLOAD NEW METADATA URL========================================================================================================================================
-
-      const nftData = await metaplex.nfts().findByMint({ mintAddress: nftToClaim });
-
+    const task = metaplex
+      .nfts()
+      .findByMint({ mintAddress: new PublicKey(nftToClaim) });
+    const nftData = await task.run();
     const metadataUpdated = nftData.json;
 
     const updatedAttributes = [];
@@ -777,7 +773,7 @@ export default async function handler(req: any, res: any) {
 
     const newMetadataURL = await updateAdventureCount(updatedMetadata);
 
-    const keypair = Keypair.fromSecretKey(bs58.decode(process.env.ADV_ESCROW!));
+    const keypair = Keypair.fromSecretKey(bs58.decode(process.env.ESCROW!));
     const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
       "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
     );
@@ -852,7 +848,7 @@ export default async function handler(req: any, res: any) {
         });
         res.status(200).json({ info: "success" });
       } else {
-        res.status(200).json({ info: "failed" });
+        res.status(500).json({ info: "failed", error: "error 7" });
       }
     } catch (e) {
       console.log(e);
@@ -863,6 +859,6 @@ export default async function handler(req: any, res: any) {
     await sendCUSTOM();
   } catch (e) {
     console.log(e);
-    res.status(500).json({ info: "failed" });
+    res.status(500).json({ info: "failed", error: "error 8" });
   }
 }

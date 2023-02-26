@@ -998,7 +998,7 @@ export default function Admin() {
                       "Content-Type": "application/json",
                     },
                     body: new URLSearchParams({
-                      'base64image': base64_data,
+                      'base64image': base64_data2,
                       'metadata': JSON.stringify(null)
                     })
                   }
