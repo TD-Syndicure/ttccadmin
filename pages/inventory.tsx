@@ -501,7 +501,7 @@ export default function Admin() {
       const [costSOL, setCostSOL]: any = useState(0);
       const [quantity, setQuantity]: any = useState(0);
       const [available, setAvailable]: any = useState(false);
-      const [file, setFile] = useState<File>();
+      const [file3, setFile3] = useState<File>();
 
       useEffect(() => {
         const getMetadataForOne = async (nft: any) => {
@@ -529,10 +529,10 @@ export default function Admin() {
       }, [hashlist]);
 
       const submitItem = async () => {
-        if (file) {
+        if (file3) {
           //gets base64 data for trait application image
           let reader = new FileReader();
-          reader.readAsBinaryString(file);
+          reader.readAsBinaryString(file3);
           reader.onload = async function () {
             //@ts-ignore
             let base64_data = await window.btoa(reader2.result!);
@@ -600,7 +600,7 @@ export default function Admin() {
                 setCostSOL(0);
                 setLoading(false);
                 setAvailable(false);
-                setFile(null);
+                setFile3(null);
                 alert.removeAll();
                 alert.success(`Success!`);
               }
@@ -696,11 +696,11 @@ export default function Admin() {
                   id="imgUpload2"
                   type="file"
                   style={{ display: "none" }}
-                  onChange={(e) => setFile(e.target.files[0])}
+                  onChange={(e) => setFile3(e.target.files[0])}
                 />
                 <label htmlFor="imgUpload2" className="uploadImage">
-                  {file ? (
-                    <img src={URL.createObjectURL(file)} />
+                  {file3 ? (
+                    <img src={URL.createObjectURL(file3)} />
                   ) : (
                     <>
                       <AiOutlineUpload />
