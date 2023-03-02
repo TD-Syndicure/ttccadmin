@@ -1,5 +1,4 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-
 import {
   bundlrStorage,
   keypairIdentity,
@@ -7,7 +6,6 @@ import {
 } from "@metaplex-foundation/js";
 import { bs58 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
-import { wait } from "../../scripts/helpers";
 
 export const config = {
   api: {
@@ -49,22 +47,22 @@ export default async function handler(req, res) {
         collectionAuthority: keypair,
       });
 
-    const { mintAddress } = transactionBuilder.getContext();
-    await metaplex.rpc().sendAndConfirmTransaction(transactionBuilder);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const nft = await metaplex.nfts().findByMint({ mintAddress });
-
-    if (nft) {
-      res.json({ mint: nft?.address?.toBase58() });
-    } else {
-      console.log('retrying checks for mint address')
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { mintAddress } = transactionBuilder.getContext();
+      await metaplex.rpc().sendAndConfirmTransaction(transactionBuilder);
+      await new Promise((resolve) => setTimeout(resolve, 2500));
       const nft = await metaplex.nfts().findByMint({ mintAddress });
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      res.json({ mint: nft?.address?.toBase58() });
+  
+      if (nft) {
+        res.json({ mint: nft?.address?.toBase58() });
+      } else {
+        console.log('retrying checks for mint address')
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        const nft = await metaplex.nfts().findByMint({ mintAddress });
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        res.json({ mint: nft?.address?.toBase58() });
+      }
+    } catch (error) {
+      console.log(error);
+      res.json({ mint: "failed" });
     }
-  } catch (error) {
-    console.log(error);
-    res.json({ mint: "failed" });
   }
-}

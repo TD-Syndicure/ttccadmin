@@ -120,17 +120,21 @@ export default function Admin() {
             //uploads metadata and image files to arweave
             alert.removeAll();
             alert.info("Uploading metadata...");
+
             const requestData = {
               method: "POST",
               header: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
               },
-              body: JSON.stringify({
+              body: new URLSearchParams({
                 base64image: base64_data,
-                metadata: null,
+                metadata: JSON.stringify(null),
               }),
             };
-            var response = await fetch("https://upgradestation.fracturedapes.com/uploadMetadataForMint", requestData);
+            var response = await fetch(
+              "https://upgradestation.fracturedapes.com/uploadMetadataForMint",
+              requestData
+            );
             const res = await response.json();
             console.log(res);
             imageForMetadata = res.image;
@@ -168,11 +172,17 @@ export default function Admin() {
             const requestData = {
               method: "POST",
               header: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
               },
-              body: JSON.stringify({ base64image: base64_data, metadata: null }),
+              body: JSON.stringify({
+                base64image: base64_data,
+                metadata: null,
+              }),
             };
-            var response = await fetch("./api/uploadMetadataForMint", requestData);
+            var response = await fetch(
+              "https://upgradestation.fracturedapes.com/uploadMetadataForMint",
+              requestData
+            );
             const res = await response.json();
             console.log(res);
             imageForImageGeneration = res.image;
@@ -218,6 +228,9 @@ export default function Admin() {
 
         await writeAPI(publicKey?.toBase58()!, "updateTrait", null, {
           costSOL: +costSOL,
+          costMango: +costMango,
+          costJelly: +costJelly,
+          costPuff: +costPuff,
           cost: +cost,
           quantity: quantity,
           metadata: JSON.stringify(localMetadata),
@@ -235,6 +248,9 @@ export default function Admin() {
             id: item.id,
             data: {
               cost: +cost,
+              costMango: +costMango,
+              costJelly: +costJelly,
+              costPuff: +costPuff,
               costSOL: +costSOL,
               metadata: JSON.stringify(localMetadata),
               hashlist: item?.data?.hashlist,
@@ -485,6 +501,7 @@ export default function Admin() {
       const [costSOL, setCostSOL]: any = useState(0);
       const [quantity, setQuantity]: any = useState(0);
       const [available, setAvailable]: any = useState(false);
+      const [file, setFile] = useState<File>();
 
       useEffect(() => {
         const getMetadataForOne = async (nft: any) => {
@@ -512,53 +529,83 @@ export default function Admin() {
       }, [hashlist]);
 
       const submitItem = async () => {
-        const newTraitDocID = await writeAPI(
-          publicKey?.toBase58()!,
-          "addTrait",
-          null,
-          {
-            costSOL: +costSOL,
-            costMango: +costMango,
-            costJelly: +costJelly,
-            costPuff: +costPuff,
-            cost: +cost,
-            metadata: metadata,
-            hashlist: hashlist,
-            quantity: quantity,
-            available: available,
-            image: null
-          }
-        );
+        if (file) {
+          //gets base64 data for trait application image
+          let reader = new FileReader();
+          reader.readAsBinaryString(file);
+          reader.onload = async function () {
+            //@ts-ignore
+            let base64_data = await window.btoa(reader2.result!);
+            if (base64_data) {
+              const requestData = {
+                method: "POST",
+                header: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                  base64image: base64_data,
+                  metadata: JSON.stringify(null),
+                }),
+              };
+              var response2 = await fetch(
+                "https://upgradestation.fracturedapes.com/uploadMetadataForMint",
+                requestData
+              );
+              const res = await response2.json();
 
-        if (newTraitDocID) {
-          setStoreItems([
-            ...storeItems,
-            {
-              id: newTraitDocID.info,
-              data: {
-                costSOL: +costSOL,
-                costMango: +costMango,
-                costJelly: +costJelly,
-                costPuff: +costPuff,
-                cost: +cost,
-                metadata: metadata,
-                hashlist: hashlist,
-                quantity: quantity,
-                available: available,
-                image: null
-              },
-            },
-          ]);
-          setHashlist();
-          setMetadata();
-          setQuantity(0);
-          setCost(0);
-          setMango(0);
-          setJelly(0);
-          setPuff(0);
-          setCostSOL(0);
-          setLoading(false);
-          setAvailable(false);
+              const newTraitDocID = await writeAPI(
+                publicKey?.toBase58()!,
+                "addTrait",
+                null,
+                {
+                  costSOL: +costSOL,
+                  costMango: +costMango,
+                  costJelly: +costJelly,
+                  costPuff: +costPuff,
+                  cost: +cost,
+                  metadata: metadata,
+                  hashlist: hashlist,
+                  quantity: quantity,
+                  available: available,
+                  image: res.image,
+                }
+              );
+
+              if (newTraitDocID) {
+                setStoreItems([
+                  ...storeItems,
+                  {
+                    id: newTraitDocID.info,
+                    data: {
+                      costSOL: +costSOL,
+                      costMango: +costMango,
+                      costJelly: +costJelly,
+                      costPuff: +costPuff,
+                      cost: +cost,
+                      metadata: metadata,
+                      hashlist: hashlist,
+                      quantity: quantity,
+                      available: available,
+                      image: res.image,
+                    },
+                  },
+                ]);
+                setHashlist();
+                setMetadata();
+                setQuantity(0);
+                setCost(0);
+                setMango(0);
+                setJelly(0);
+                setPuff(0);
+                setCostSOL(0);
+                setLoading(false);
+                setAvailable(false);
+                setFile(null);
+                alert.removeAll();
+                alert.success(`Success!`);
+              }
+            }
+          };
         }
       };
 
@@ -645,6 +692,22 @@ export default function Admin() {
                   checked={available}
                   onChange={(e) => setAvailable(!available)}
                 />
+                <input
+                  id="imgUpload2"
+                  type="file"
+                  style={{ display: "none" }}
+                  onChange={(e) => setFile(e.target.files[0])}
+                />
+                <label htmlFor="imgUpload2" className="uploadImage">
+                  {file ? (
+                    <img src={URL.createObjectURL(file)} />
+                  ) : (
+                    <>
+                      <AiOutlineUpload />
+                      <h1>Upload Image Used For Generation</h1>
+                    </>
+                  )}
+                </label>
               </div>
             </div>
           </div>
@@ -926,11 +989,14 @@ export default function Admin() {
                 "Content-Type": "application/json",
               },
               body: new URLSearchParams({
-                'base64image': base64_data,
-                'metadata': JSON.stringify(metadataToUpload)
-              })
-            }
-            var response = await fetch("https://upgradestation.fracturedapes.com/uploadMetadataForMint", requestData);
+                base64image: base64_data,
+                metadata: JSON.stringify(metadataToUpload),
+              }),
+            };
+            var response = await fetch(
+              "https://upgradestation.fracturedapes.com/uploadMetadataForMint",
+              requestData
+            );
             const res = await response.json();
             console.log(res);
 
@@ -960,7 +1026,7 @@ export default function Admin() {
               }),
             };
             let nftsMinted: string[] = [];
-            console.log(nftsMinted)
+            console.log(nftsMinted);
             for (let i = 0; i < quantity; i++) {
               alert.removeAll();
               alert.info(`Minting NFT #${i + 1}/${quantity}`);
@@ -969,15 +1035,23 @@ export default function Admin() {
               if (res2.mint !== "failed") {
                 nftsMinted.push(res2.mint);
               } else if (res2.mint === "failed") {
-                alert.removeAll();
-                alert.info("Failed to read a mint address, retrying the remaining balance...");
-                await wait(2000);
-                alert.removeAll();
-                alert.info(`Minting NFT #${i - nftsMinted?.length + 1}/${quantity}`);
-                var response2 = await fetch("./api/mintNFT", requestData2);
-                const res2 = await response2.json();
-                if (res2.mint !== "failed") {
-                  nftsMinted.push(res2.mint);
+                try {
+                  await response2.json();
+                } catch (e) {
+                  alert.removeAll();
+                  alert.info(
+                    "Failed to read a mint address, retrying the remaining balance..."
+                  );
+                  await wait(2000);
+                  alert.removeAll();
+                  alert.info(
+                    `Minting NFT #${i - nftsMinted?.length + 1}/${quantity}`
+                  );
+                  var response2 = await fetch("./api/mintNFT", requestData2);
+                  const res2 = await response2.json();
+                  if (res2.mint !== "failed") {
+                    nftsMinted.push(res2.mint);
+                  }
                 }
               }
             }
@@ -998,11 +1072,14 @@ export default function Admin() {
                       "Content-Type": "application/json",
                     },
                     body: new URLSearchParams({
-                      'base64image': base64_data2,
-                      'metadata': JSON.stringify(null)
-                    })
-                  }
-                  var response2 = await fetch("https://upgradestation.fracturedapes.com/uploadMetadataForMint", requestData2);
+                      base64image: base64_data2,
+                      metadata: JSON.stringify(null),
+                    }),
+                  };
+                  var response2 = await fetch(
+                    "https://upgradestation.fracturedapes.com/uploadMetadataForMint",
+                    requestData2
+                  );
                   const res2 = await response2.json();
 
                   console.log(nftsMinted);
@@ -1013,10 +1090,10 @@ export default function Admin() {
                     null,
                     {
                       costSOL: +costSOL,
-                      cost: +cost,
                       costMango: +costMango,
                       costJelly: +costJelly,
                       costPuff: +costPuff,
+                      cost: +cost,
                       metadata: JSON.stringify({
                         ...metadataToUpload,
                         image: res.image,
@@ -1044,10 +1121,10 @@ export default function Admin() {
                         id: newTraitDocID.info,
                         data: {
                           costSOL: +costSOL,
-                          cost: +cost,
                           costMango: +costMango,
                           costJelly: +costJelly,
                           costPuff: +costPuff,
+                          cost: +cost,
                           metadata: JSON.stringify({
                             ...metadataToUpload,
                             image: res.image,
@@ -1095,10 +1172,10 @@ export default function Admin() {
                 null,
                 {
                   costSOL: +costSOL,
-                  cost: +cost,
                   costMango: +costMango,
                   costJelly: +costJelly,
                   costPuff: +costPuff,
+                  cost: +cost,
                   metadata: JSON.stringify(localMetadata),
                   hashlist: JSON.stringify(nftsMinted),
                   image: res.image,
@@ -1113,10 +1190,10 @@ export default function Admin() {
                     id: newTraitDocID.info,
                     data: {
                       costSOL: +costSOL,
-                      cost: +cost,
                       costMango: +costMango,
                       costJelly: +costJelly,
                       costPuff: +costPuff,
+                      cost: +cost,
                       metadata: JSON.stringify(localMetadata),
                       hashlist: JSON.stringify(nftsMinted),
                       image: res.image,
@@ -1209,15 +1286,23 @@ export default function Admin() {
               />
             </div>
             <div>
-            <h1>Collection Address</h1>
-            <ul>
-              <li className="text-white">Chimps: BzNwS8jm41n9MPoqVxKmwDK27DaJkscfn66344eHLrGR</li>
-              <li className="text-white">Time Devices: 9WYY1hsAgujj8jMHnmPbjAqHjnBXrMFETpBTgrhKSh1y</li>
-              <li className="text-white">Lost Chimps:</li>
-              <li className="text-white">Toybox: 8MguWvQQrqi2nqF2vLQGTMzoYjK9xSen8oqxPUQ89Jw6</li>
-              <li className="text-white">Sci-Fi: 4TTf6hMf6NPsQFUfwNT957WgCC8pDpSGWxUycf3aivCP</li>
-            </ul>
-          </div>
+              <h1>Collection Address</h1>
+              <ul>
+                <li className="text-white">
+                  Chimps: BzNwS8jm41n9MPoqVxKmwDK27DaJkscfn66344eHLrGR
+                </li>
+                <li className="text-white">
+                  Time Devices: 9WYY1hsAgujj8jMHnmPbjAqHjnBXrMFETpBTgrhKSh1y
+                </li>
+                <li className="text-white">Lost Chimps:</li>
+                <li className="text-white">
+                  Toybox: 8MguWvQQrqi2nqF2vLQGTMzoYjK9xSen8oqxPUQ89Jw6
+                </li>
+                <li className="text-white">
+                  Sci-Fi: 4TTf6hMf6NPsQFUfwNT957WgCC8pDpSGWxUycf3aivCP
+                </li>
+              </ul>
+            </div>
             <div className="inputRow">
               <h1>Description</h1>
               <textarea
