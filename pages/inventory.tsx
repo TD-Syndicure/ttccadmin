@@ -1403,16 +1403,12 @@ export default function Admin() {
                 </button>
               </div>
             </div>
-            {publicKey ? (
               <button
                 onClick={() => (confirm ? mintNFTs() : setConfirm(true))}
                 className="mintNFTsButton"
               >
                 {confirm ? "Are you sure?" : "Mint & Add To Store"}
               </button>
-            ) : (
-              <WalletMultiButton />
-            )}
           </div>
         </div>
       );
