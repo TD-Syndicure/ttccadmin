@@ -732,46 +732,46 @@ export default async function handler(req: any, res: any) {
     const task = metaplex
       .nfts()
       .findByMint({ mintAddress: new PublicKey(nftToClaim) });
-    const nftData = await task.run();
-    const metadataUpdated = nftData.json;
+    // const nftData = await task.run();
+    // const metadataUpdated = nftData.json;
 
     const updatedAttributes = [];
-    metadataUpdated?.attributes?.forEach((o: any) => {
-      if (o.trait_type === "Adventure Count") {
-        updatedAttributes.push({
-          trait_type: "Adventure Count",
-          value: +o.value + 1,
-        });
-      } else {
-        updatedAttributes.push(o);
-      }
-    });
+    // metadataUpdated?.attributes?.forEach((o: any) => {
+    //   if (o.trait_type === "Adventure Count") {
+    //     updatedAttributes.push({
+    //       trait_type: "Adventure Count",
+    //       value: +o.value + 1,
+    //     });
+    //   } else {
+    //     updatedAttributes.push(o);
+    //   }
+    // });
 
-    if (
-      !metadataUpdated?.attributes?.some((o: any) => o.trait_type === "Role")
-    ) {
-      updatedAttributes.push({
-        trait_type: "Role",
-        value: "Time Traveler",
-      });
-    }
-    if (
-      !metadataUpdated?.attributes?.some(
-        (o: any) => o.trait_type === "Adventure Count"
-      )
-    ) {
-      updatedAttributes.push({
-        trait_type: "Adventure Count",
-        value: 1,
-      });
-    }
+    // if (
+    //   !metadataUpdated?.attributes?.some((o: any) => o.trait_type === "Role")
+    // ) {
+    //   updatedAttributes.push({
+    //     trait_type: "Role",
+    //     value: "Time Traveler",
+    //   });
+    // }
+    // if (
+    //   !metadataUpdated?.attributes?.some(
+    //     (o: any) => o.trait_type === "Adventure Count"
+    //   )
+    // ) {
+    //   updatedAttributes.push({
+    //     trait_type: "Adventure Count",
+    //     value: 1,
+    //   });
+    // }
 
-    const updatedMetadata = {
-      ...metadataUpdated,
-      attributes: updatedAttributes,
-    };
+    // const updatedMetadata = {
+    //   ...metadataUpdated,
+    //   attributes: updatedAttributes,
+    // };
 
-    const newMetadataURL = await updateAdventureCount(updatedMetadata);
+    // const newMetadataURL = await updateAdventureCount(updatedMetadata);
 
     const keypair = Keypair.fromSecretKey(bs58.decode(process.env.ESCROW!));
     const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
@@ -786,31 +786,31 @@ export default async function handler(req: any, res: any) {
       ],
       TOKEN_METADATA_PROGRAM_ID
     );
-    const updated_data: DataV2 = {
-      name: nftData.name,
-      symbol: nftData.symbol,
-      uri: newMetadataURL,
-      sellerFeeBasisPoints: nftData.sellerFeeBasisPoints,
-      creators: nftData.creators,
-      collection: {
-        verified: nftData?.collection?.verified!,
-        key: nftData?.collection?.address!,
-      },
-      uses: null,
-    };
+    // const updated_data: DataV2 = {
+      // name: nftData.name,
+      // symbol: nftData.symbol,
+      // uri: newMetadataURL,
+      // sellerFeeBasisPoints: nftData.sellerFeeBasisPoints,
+      // creators: nftData.creators,
+      // collection: {
+      //   verified: nftData?.collection?.verified!,
+      //   key: nftData?.collection?.address!,
+    //   },
+    //   uses: null,
+    // };
     const accounts: UpdateMetadataAccountV2InstructionAccounts = {
       metadata: metadatakey,
       updateAuthority: keypair.publicKey,
     };
-    const args: UpdateMetadataAccountV2InstructionArgs = {
-      updateMetadataAccountArgsV2: {
-        data: updated_data,
-        updateAuthority: keypair.publicKey,
-        primarySaleHappened: true,
-        isMutable: true,
-      },
-    };
-    instructions.push(createUpdateMetadataAccountV2Instruction(accounts, args));
+    // const args: UpdateMetadataAccountV2InstructionArgs = {
+    //   updateMetadataAccountArgsV2: {
+    //     data: updated_data,
+    //     updateAuthority: keypair.publicKey,
+    //     primarySaleHappened: true,
+    //     isMutable: true,
+    //   },
+    // };
+    // instructions.push(createUpdateMetadataAccountV2Instruction(accounts, args));
 
     // =========================================================================================================================================================
 
