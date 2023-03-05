@@ -447,12 +447,12 @@ export default function Admin() {
                   </div>
                   <div>
                     <input
-                      id="imgUpload5"
+                      id="imgUpload3"
                       type="file"
                       style={{ display: "none" }}
                       onChange={(e) => setFile(e.target.files[0])}
                     />
-                    <label htmlFor="imgUpload5" className="uploadImage">
+                    <label htmlFor="imgUpload3" className="uploadImage">
                       {file ? (
                         <img src={URL.createObjectURL(file)} />
                       ) : (
@@ -535,7 +535,7 @@ export default function Admin() {
           reader.readAsBinaryString(file3);
           reader.onload = async function () {
             //@ts-ignore
-            let base64_data = await window.btoa(reader2.result!);
+            let base64_data = await window.btoa(reader.result!);
             if (base64_data) {
               const requestData = {
                 method: "POST",
@@ -693,12 +693,12 @@ export default function Admin() {
                   onChange={(e) => setAvailable(!available)}
                 />
                 <input
-                  id="imgUpload3"
+                  id="imgUpload5"
                   type="file"
                   style={{ display: "none" }}
                   onChange={(e) => setFile3(e.target.files[0])}
                 />
-                <label htmlFor="imgUpload3" className="uploadImage">
+                <label htmlFor="imgUpload5" className="uploadImage">
                   {file3 ? (
                     <img src={URL.createObjectURL(file3)} />
                   ) : (
