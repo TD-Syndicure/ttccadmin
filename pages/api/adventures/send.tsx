@@ -65,7 +65,7 @@ export default async function handler(req: any, res: any) {
   const docForFunction = requestData.docID;
 
   const connection = new Connection(
-    "https://lingering-winter-vineyard.solana-mainnet.quiknode.pro/cac2c64de80fb7bd7895357dbd96a436320d0441/",
+    "https://patient-lively-brook.solana-mainnet.quiknode.pro/e00bf50f58434f5f45333bcbe77a45d69171cca1/",
     { commitment: "confirmed", confirmTransactionInitialTimeout: 60000 }
   );
 

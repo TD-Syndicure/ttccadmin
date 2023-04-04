@@ -34,7 +34,7 @@ export default function Admin() {
   const router = useRouter();
 
   function createConnection(
-    url = "https://lingering-winter-vineyard.solana-mainnet.quiknode.pro/cac2c64de80fb7bd7895357dbd96a436320d0441/"
+    url = "https://patient-lively-brook.solana-mainnet.quiknode.pro/e00bf50f58434f5f45333bcbe77a45d69171cca1/"
   ) {
     return new Connection(url, {
       commitment: "confirmed",
@@ -85,8 +85,17 @@ export default function Admin() {
       setLoadingNewNFT(true);
       let currentImageArray = [];
       let i = 0;
+
+      const updatedAttributes = userMetadata.metadata.attributes.map((attributeType) => {
+				if (attributeType.trait_type === "Eye Wear") {
+				  return {...attributeType, trait_type: "Eyewear"};
+				} else {
+				  return attributeType;
+				}
+			  });
+
       if (userMetadata.metadata.attributes[0].trait_type === "Iconic") {
-        for (const attributeType of userMetadata.metadata.attributes) {
+        for (const attributeType of updatedAttributes) {
           await toDataURL(
             `/attributes/ttcc/${encodeURI(
               attributeType.trait_type
@@ -97,7 +106,7 @@ export default function Admin() {
           );
         }
       } else {
-        for (const attributeType of userMetadata.metadata.attributes) {
+        for (const attributeType of updatedAttributes) {
           try {
             if (type2 === "enraged") {
               if (

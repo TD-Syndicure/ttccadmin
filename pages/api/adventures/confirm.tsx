@@ -37,7 +37,7 @@ const app = initializeApp(firebaseConfig, 'third');
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const db = getFirestore(app);
 
-    function createConnection(url = "https://lingering-winter-vineyard.solana-mainnet.quiknode.pro/cac2c64de80fb7bd7895357dbd96a436320d0441/") {
+    function createConnection(url = "https://patient-lively-brook.solana-mainnet.quiknode.pro/e00bf50f58434f5f45333bcbe77a45d69171cca1/") {
         return new Connection(url, { commitment: "confirmed", confirmTransactionInitialTimeout: 60000 });
     }
     const connection = createConnection();
