@@ -23,10 +23,7 @@ import web3, {
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  loadingState,
-  storeItemsState,
-} from "../scripts/atoms";
+import { loadingState, storeItemsState } from "../scripts/atoms";
 import { Router, useRouter } from "next/router";
 import { Metaplex } from "@metaplex-foundation/js";
 
@@ -34,7 +31,7 @@ export default function Admin() {
   const router = useRouter();
 
   function createConnection(
-    url = "https://patient-lively-brook.solana-mainnet.quiknode.pro/e00bf50f58434f5f45333bcbe77a45d69171cca1/"
+    url = "https://sly-sleek-grass.solana-mainnet.quiknode.pro/10b32dede2c9f7277037b8524ccccf0ae7a0fddd/"
   ) {
     return new Connection(url, {
       commitment: "confirmed",
@@ -65,7 +62,7 @@ export default function Admin() {
   //use these values when everything is finally uploaded to arweave and blockchain
   const [finishedMetadataURI, setFinishedMetadataURI]: any = useState(null);
   const [finishedMetadataObj, setFinishedMetadataObj]: any = useState(null);
-
+  const [updatedMetadata, setUpdatedMetadata]: any = useState([]);
   const [localMetadata, setLocalMetadata]: any = useState();
   const [loading, setLoading] = useRecoilState(loadingState);
   const [loadingNewNFT, setLoadingNewNFT] = useState(false);
@@ -84,15 +81,18 @@ export default function Admin() {
     const renderUpdatedImage = async (type2: any) => {
       setLoadingNewNFT(true);
       let currentImageArray = [];
+      let currentMetadataArray = [];
       let i = 0;
 
-      const updatedAttributes = userMetadata.metadata.attributes.map((attributeType) => {
-				if (attributeType.trait_type === "Eye Wear") {
-				  return {...attributeType, trait_type: "Eyewear"};
-				} else {
-				  return attributeType;
-				}
-			  });
+      const updatedAttributes = userMetadata.metadata.attributes.map(
+        (attributeType) => {
+          if (attributeType.trait_type === "Eye Wear") {
+            return { ...attributeType, trait_type: "Eyewear" };
+          } else {
+            return attributeType;
+          }
+        }
+      );
 
       if (userMetadata.metadata.attributes[0].trait_type === "Iconic") {
         for (const attributeType of updatedAttributes) {
@@ -155,11 +155,12 @@ export default function Admin() {
                 attributeType.trait_type === "Eye Wear"
               ) {
                 await toDataURL(
-                  `/attributes/ttcc/${encodeURI("Eye Wear")}/${encodeURI(
+                  `/attributes/ttcc/${encodeURI("Eyewear")}/${encodeURI(
                     attributeType.value
                   )}.png`,
                   function (dataUrl) {
                     currentImageArray.push(dataUrl);
+                    currentMetadataArray.push(attributeType);
                   }
                 );
               } else if (attributeType.trait_type === "Gaming Headset") {
@@ -178,13 +179,29 @@ export default function Admin() {
                   )}/${encodeURI(attributeType.value)}.png`,
                   function (dataUrl) {
                     currentImageArray.push(dataUrl);
+                    currentMetadataArray.push(attributeType);
                   }
                 );
               }
             }
           } catch {
             for (const item of storeItems) {
-              if (
+              if (attributeType.trait_type === "Eye Wear") {
+                if (
+                  JSON.parse(
+                    item.data.metadata
+                  ).attributes[0].trait_type.toLowerCase() === "eyewear" &&
+                  JSON.parse(
+                    item.data.metadata
+                  ).attributes[0].value.toLowerCase() ===
+                    attributeType.value.toLowerCase()
+                ) {
+                  currentMetadataArray.push(item.data.metadata.attributes[0]);
+                  await toDataURL(item.data.image, function (dataUrl) {
+                    currentImageArray.push(dataUrl);
+                  });
+                }
+              } else if (
                 JSON.parse(
                   item.data.metadata
                 ).attributes[0].trait_type.toLowerCase() ===
@@ -194,6 +211,9 @@ export default function Admin() {
                 ).attributes[0].value.toLowerCase() ===
                   attributeType.value.toLowerCase()
               ) {
+                currentMetadataArray.push(
+                  JSON.parse(item.data.metadata).attributes[0]
+                );
                 await toDataURL(item.data.image, function (dataUrl) {
                   currentImageArray.push(dataUrl);
                 });
@@ -204,10 +224,30 @@ export default function Admin() {
           i++;
         }
       }
+
+      const sortedMetadataArray = currentMetadataArray.sort((a, b) => {
+        const traitOrder = [
+          "Background",
+          "Fur",
+          "Eyes",
+          "Clothing",
+          "Headwear",
+          "Eyewear",
+          "Neck",
+          "Mouth",
+          "Accessory",
+          "Role",
+          "Adventure Count",
+        ];
+        return (
+          traitOrder.indexOf(a.trait_type) - traitOrder.indexOf(b.trait_type)
+        );
+      });
+
       generateDownload(currentImageArray).then((base64image) => {
         setLocalNFT(base64image);
         setLoadingNewNFT(false);
-        // console.log("RAN THIS HERE!")
+        setUpdatedMetadata(sortedMetadataArray);
       });
     };
     if (userMetadata) {
@@ -263,7 +303,8 @@ export default function Admin() {
       localNFT.substring(22),
       userMetadata,
       [],
-      enraged
+      enraged,
+      updatedMetadata
     );
 
     if (response.image) {
@@ -314,7 +355,9 @@ export default function Admin() {
           setFindingNFT(true);
           const mint: any = new PublicKey(address);
 
-          const nftData = await metaplex.nfts().findByMint({ mintAddress: mint });
+          const nftData = await metaplex
+            .nfts()
+            .findByMint({ mintAddress: mint });
 
           // console.log(nftData)
 
@@ -426,22 +469,28 @@ export default function Admin() {
       </Head>
       <div className="container">
         <div className={styles.main}>
-        <div className="navbar">
-        {publicKey ? (
-                <div className="mr-2">
-                    <div className="selectSession">
-                        <button onClick={() => router.push('/')} style={{ background: '#FFFFFF', color: '#B7B7B7' }} className="bigButtons">Back to Home</button>
-                    </div>
+          <div className="navbar">
+            {publicKey ? (
+              <div className="mr-2">
+                <div className="selectSession">
+                  <button
+                    onClick={() => router.push("/")}
+                    style={{ background: "#FFFFFF", color: "#B7B7B7" }}
+                    className="bigButtons"
+                  >
+                    Back to Home
+                  </button>
                 </div>
-              ) : null}
-          <div className="flex">
-            <WalletMultiButton />
+              </div>
+            ) : null}
+            <div className="flex">
+              <WalletMultiButton />
+            </div>
           </div>
-        </div>
 
           <div className="adminPanel">
             {/* {authorized.includes(publicKey?.toBase58()) ? ( */}
-              <FetchNFT />
+            <FetchNFT />
             {/* ) : (
               <h1>Not authorized.</h1>
             )} */}

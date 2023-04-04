@@ -45,7 +45,7 @@ const app = initializeApp(firebaseConfig);
 
 export default async function handler(req: any, res: any) {
   const connection = new Connection(
-    "https://patient-lively-brook.solana-mainnet.quiknode.pro/e00bf50f58434f5f45333bcbe77a45d69171cca1/",
+    "https://sly-sleek-grass.solana-mainnet.quiknode.pro/10b32dede2c9f7277037b8524ccccf0ae7a0fddd/",
     { commitment: "confirmed", confirmTransactionInitialTimeout: 60000 }
   );
   const requestData = JSON.parse(req.body);

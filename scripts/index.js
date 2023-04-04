@@ -19,19 +19,19 @@ export function toDataURL(url, callback) {
     })
 }
 
-export const uploadIMG = async(b64image, localMetadata, newTraits, enrage) => {
-
-    const requestData = {
-        method: 'POST',
-        header: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            'base64image': b64image,
-            'metadata': JSON.stringify(localMetadata),
-            'newTraits': JSON.stringify(newTraits),
-            'enrage': enrage === true ? 'true' : 'false'
-        })
+export const uploadIMG = async (b64image, localMetadata, newTraits, enrage, newAttributes) => {
+	const requestData = {
+		method: "POST",
+		header: {
+			"Content-Type": "application/x-www-form-urlencoded",
+		},
+		body: new URLSearchParams({
+			base64image: b64image,
+			metadata: JSON.stringify(localMetadata),
+			newTraits: JSON.stringify(newTraits),
+			enrage: enrage === true ? "true" : "false",
+			attributes: JSON.stringify(newAttributes),
+		}),
     }
     
     // var response = await fetch('https://immense-headland-03580.herokuapp.com/fape', requestData)
