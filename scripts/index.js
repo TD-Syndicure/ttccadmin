@@ -114,16 +114,22 @@ export const readAPI = async (wallet, request, extraInfo) => {
 
 }
 
-export const adminUpdate = async(wallet, localMetadata, mint, userMetadata, newTraits) => {
+export const adminUpdate = async(mint, userMetadata) => {
 
     const requestData = {
-        method: 'POST',
-        header: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({publicKey: wallet, metadata: localMetadata, mint: mint, userMetadata: userMetadata, newTraits: newTraits})
-    }
-    var response = await fetch('../api/adminUpdate', requestData)
+		method: "POST",
+		header: {
+			"Content-Type": "application/x-www-form-urlencoded",
+		},
+		body: new URLSearchParams({
+			mint: mint,
+			userMetadata: userMetadata,
+		}),
+	};
+	var response = await fetch(
+		"https://upgradestation.fracturedapes.com/ttcc/onChainUpdate",
+		requestData
+	);
 
     return(response.json());
 }

@@ -319,7 +319,7 @@ export default function Admin() {
   const changeMetadata2 = async (signature: any, response: any) => {
     let localMetadata = {
       ...userMetadata.metadata,
-      attributes: getNewMetadata(),
+      attributes: updatedMetadata,
       image: response.image,
       properties: {
         creators: userMetadata.creators,
@@ -328,7 +328,7 @@ export default function Admin() {
     };
 
     console.log("new metadata url: " + response.json);
-    await adminUpdate(null, response.json, userMetadata.mint, userMetadata, []);
+    await adminUpdate(userMetadata.mint, response.json);
   };
 
   const changeMetadata = async () => {
