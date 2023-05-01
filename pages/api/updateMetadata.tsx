@@ -121,7 +121,7 @@ export default async function handler(req, res) {
   //wallet for arweave upload costs
   const dev = new PublicKey("Hh3dehjrQ7gXiipcewCWnWZZHpW5rA9gwBs7Aosno3B5"); // dev wallet address
   const devWallet = new PublicKey(
-    "FAPELahUpRFN5tr8bfNzsPt8RSrxkyXrqW617sev5HD7"
+    "Hh3dehjrQ7gXiipcewCWnWZZHpW5rA9gwBs7Aosno3B5"
   );
   //this covers arweave upload costs
   instructions.push(

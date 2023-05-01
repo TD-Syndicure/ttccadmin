@@ -552,7 +552,7 @@ export default function Admin() {
 									costMango: +costMango,
 									costJelly: +costJelly,
 									costPuff: +costPuff,
-                  costNft: +costNft,
+									costNft: +costNft,
 									cost: +cost,
 									metadata: metadata,
 									hashlist: hashlist,
@@ -572,7 +572,7 @@ export default function Admin() {
 											costMango: +costMango,
 											costJelly: +costJelly,
 											costPuff: +costPuff,
-                      costNft: +costNft,
+											costNft: +costNft,
 											cost: +cost,
 											metadata: metadata,
 											hashlist: hashlist,
@@ -589,7 +589,7 @@ export default function Admin() {
 								setMango(0);
 								setJelly(0);
 								setPuff(0);
-                setCostNft(0);
+								setCostNft(0);
 								setCostSOL(0);
 								setLoading(false);
 								setAvailable(false);
@@ -770,9 +770,8 @@ export default function Admin() {
 							<AiOutlineMinus />
 						</div>
 						<div
-							className={`plusSign ${
-								traitType !== "" && value !== "" ? "" : "disabledSign"
-							}`}
+							className={`plusSign ${traitType !== "" && value !== "" ? "" : "disabledSign"
+								}`}
 							onClick={() => {
 								if (traitType !== "" && value !== "") {
 									setAttributes((prev) => [
@@ -780,7 +779,8 @@ export default function Admin() {
 										{ trait_type: traitType, value: value },
 									]);
 								}
-							}}>
+							}}
+						>
 							<AiOutlinePlus />
 						</div>
 					</div>
@@ -823,7 +823,8 @@ export default function Admin() {
 								setAttributes((prev) =>
 									[...prev].filter((o, i) => i !== index)
 								);
-							}}>
+							}}
+						>
 							<AiOutlineMinus />
 						</div>
 						<div
@@ -843,7 +844,8 @@ export default function Admin() {
 								} else {
 									setEdit(!edit);
 								}
-							}}>
+							}}
+						>
 							{edit ? <AiOutlineCheck /> : <AiOutlineEdit />}
 						</div>
 					</div>
@@ -872,9 +874,8 @@ export default function Admin() {
 							<AiOutlineMinus />
 						</div>
 						<div
-							className={`plusSign ${
-								address !== "" && share !== 0 ? "" : "disabledSign"
-							}`}
+							className={`plusSign ${address !== "" && share !== 0 ? "" : "disabledSign"
+								}`}
 							onClick={() => {
 								if (address !== "" && share !== 0) {
 									setCreators((prev) => [
@@ -882,7 +883,8 @@ export default function Admin() {
 										{ address: address, verified: 0, share: share },
 									]);
 								}
-							}}>
+							}}
+						>
 							<AiOutlinePlus />
 						</div>
 					</div>
@@ -921,7 +923,8 @@ export default function Admin() {
 							className="minusSign"
 							onClick={() => {
 								setCreators((prev) => [...prev].filter((o, i) => i !== index));
-							}}>
+							}}
+						>
 							<AiOutlineMinus />
 						</div>
 						<div
@@ -941,7 +944,8 @@ export default function Admin() {
 								} else {
 									setEdit(!edit);
 								}
-							}}>
+							}}
+						>
 							{edit ? <AiOutlineCheck /> : <AiOutlineEdit />}
 						</div>
 					</div>
@@ -1021,33 +1025,20 @@ export default function Admin() {
 							}),
 						};
 						let nftsMinted: string[] = [];
-						console.log(nftsMinted);
 						for (let i = 0; i < quantity; i++) {
 							alert.removeAll();
 							alert.info(`Minting NFT #${i + 1}/${quantity}`);
+							alert.info(
+								`Please allow 3-30 seconds per mint to confirm onchain`
+							);
 							var response2 = await fetch("./api/mintNFT", requestData2);
 							const res2 = await response2.json();
 							if (res2.mint !== "failed") {
 								nftsMinted.push(res2.mint);
-							} else if (res2.mint === "failed") {
-								try {
-									await response2.json();
-								} catch (e) {
-									alert.removeAll();
-									alert.info(
-										"Failed to read a mint address, retrying the remaining balance..."
-									);
-									await wait(2000);
-									alert.removeAll();
-									alert.info(
-										`Minting NFT #${i - nftsMinted?.length + 1}/${quantity}`
-									);
-									var response2 = await fetch("./api/mintNFT", requestData2);
-									const res2 = await response2.json();
-									if (res2.mint !== "failed") {
-										nftsMinted.push(res2.mint);
-									}
-								}
+							} else if (res2.mint.status === 500) {
+								alert.removeAll();
+								alert.error("Minting failed");
+								return;
 							}
 						}
 
@@ -1386,53 +1377,28 @@ export default function Admin() {
 							<div className="attributeRow">
 								<button
 									onClick={() => setAvailable(true)}
-									style={available ? {} : { opacity: 0.3 }}>
+									style={available ? {} : { opacity: 0.3 }}
+								>
 									Yes
 								</button>
 								<button
 									onClick={() => setAvailable(false)}
-									style={!available ? {} : { opacity: 0.3 }}>
+									style={!available ? {} : { opacity: 0.3 }}
+								>
 									No
 								</button>
 							</div>
 						</div>
 						<button
 							onClick={() => (confirm ? mintNFTs() : setConfirm(true))}
-							className="mintNFTsButton">
+							className="mintNFTsButton"
+						>
 							{confirm ? "Are you sure?" : "Mint & Add To Store"}
 						</button>
 					</div>
 				</div>
 			);
 		};
-
-		// const EditHashlist = () => {
-		//     const [edit, setEdit]: any = useState(false)
-		//     const [hashlist, setHashlist]: any = useState(smoothiesHashlist)
-
-		//     const confirmChange = async() => {
-		//         await writeAPI(publicKey?.toBase58()!, "editHashlist", null, hashlist)
-		//         setSmoothiesHashlist(hashlist)
-		//     }
-
-		//     return (
-		//         <>
-		//             <button onClick={() => setEdit(!edit)} className="editSmoothie">Edit Smoothie Hashlist</button>
-		//             {edit && (
-		//                 <>
-		//                     <div className="itemBox">
-		//                         <div className="row">
-		//                             <div className="itemBoxInner">
-		//                                 <div><h1>* Hashlist (JSON Array):</h1><textarea value={hashlist} onChange={(e) => setHashlist(e.target.value)} /></div>
-		//                             </div>
-		//                         </div>
-		//                         <button onClick={() => confirmChange()}>Confirm</button>
-		//                     </div>
-		//                 </>
-		//             )}
-		//         </>
-		//     )
-		// }
 
 		return (
 			<>
@@ -1481,7 +1447,8 @@ export default function Admin() {
 									<button
 										onClick={() => router.push("/")}
 										style={{ background: "#FFFFFF", color: "#B7B7B7" }}
-										className="bigButtons">
+										className="bigButtons"
+									>
 										Back to Home
 									</button>
 								</div>

@@ -1,5 +1,7 @@
 import * as anchor from "@project-serum/anchor";
-import { PublicKey } from "@solana/web3.js";
+import {
+  PublicKey,
+} from "@solana/web3.js";
 import bs58 from "bs58";
 import { Metaplex, keypairIdentity } from "@metaplex-foundation/js";
 
@@ -21,7 +23,7 @@ export default async function handler(req, res) {
   );
 
   const endpoint =
-    "https://divine-aged-glitter.solana-mainnet.quiknode.pro/f592aec8c88056067246bcd39a76ea2074955fb3/";
+    "https://thrumming-tiniest-pine.solana-mainnet.quiknode.pro/bee247148bdf50d5f6b5ac05ee178804ace40067/";
   const connection = new anchor.web3.Connection(endpoint);
 
   const rules = "eBJLFYPxJmMGKuFwpDWkzxZeUrad92kZRC5BJLpzyT9";
@@ -33,19 +35,22 @@ export default async function handler(req, res) {
     mintAddress: new PublicKey(tokenMint),
   });
 
-  console.log("Upgrade Page Token Mint", tokenMint);
+  let authorizationDetails = null;
+
+  if (rules) {
+    authorizationDetails = {
+      authorizationType: 1,
+      option: new PublicKey(rules),
+    };
+  }
 
   await metaplex.nfts().update({
     nftOrSft,
     uri: buf,
-    authorizationDetails: rules
-      ? {
-          rules: new PublicKey(rules),
-        }
-      : null,
+    authorizationDetails: authorizationDetails
   });
 
-  console.log("Upgrade Page URI Update", buf);
-
-  res.status(200).json({ result: "success" });
+  res
+    .status(200)
+    .json({ result: "success" });
 }
