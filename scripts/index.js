@@ -126,10 +126,11 @@ export const adminUpdate = async(mint, userMetadata) => {
 			userMetadata: userMetadata,
 		}),
 	};
-	var response = await fetch(
-		"https://upgradestation.fracturedapes.com/ttcc/onChainUpdate",
-		requestData
-	);
+	// var response = await fetch(
+	// 	"https://upgradestation.fracturedapes.com/ttcc/onChainUpdate",
+	// 	requestData
+	// );
+    var response = await fetch('http://localhost:3011/ttcc/onChainUpdate', requestData)
 
     return(response.json());
 }
