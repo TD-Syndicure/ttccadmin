@@ -203,21 +203,6 @@ export default function Admin() {
                     currentImageArray.push(dataUrl);
                   });
                 }
-              } else if (attributeType.trait_type === "Fur") {
-                if (
-                  JSON.parse(
-                    item.data.metadata
-                  ).attributes[0].trait_type.toLowerCase() === "fur" &&
-                  JSON.parse(
-                    item.data.metadata
-                  ).attributes[0].value.toLowerCase() ===
-                  attributeType.value.toLowerCase()
-                ) {
-                  currentMetadataArray.push(item.data.metadata.attributes[0]);
-                  await toDataURL(item.data.image, function (dataUrl) {
-                    currentImageArray.push(dataUrl);
-                  });
-                }
               } else if (
                 JSON.parse(
                   item.data.metadata
