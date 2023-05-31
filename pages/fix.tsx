@@ -83,11 +83,13 @@ export default function Admin() {
       let currentImageArray = [];
       let currentMetadataArray = [];
       let i = 0;
-
+      console.log(currentMetadataArray)
       const updatedAttributes = userMetadata.metadata.attributes.map(
         (attributeType) => {
           if (attributeType.trait_type === "Eye Wear") {
             return { ...attributeType, trait_type: "Eyewear" };
+          } else if (attributeType.trait_type === "Fur") {
+            return { ...attributeType, trait_type: "Fur" };
           } else {
             return attributeType;
           }
@@ -194,7 +196,22 @@ export default function Admin() {
                   JSON.parse(
                     item.data.metadata
                   ).attributes[0].value.toLowerCase() ===
-                    attributeType.value.toLowerCase()
+                  attributeType.value.toLowerCase()
+                ) {
+                  currentMetadataArray.push(item.data.metadata.attributes[0]);
+                  await toDataURL(item.data.image, function (dataUrl) {
+                    currentImageArray.push(dataUrl);
+                  });
+                }
+              } else if (attributeType.trait_type === "Fur") {
+                if (
+                  JSON.parse(
+                    item.data.metadata
+                  ).attributes[0].trait_type.toLowerCase() === "fur" &&
+                  JSON.parse(
+                    item.data.metadata
+                  ).attributes[0].value.toLowerCase() ===
+                  attributeType.value.toLowerCase()
                 ) {
                   currentMetadataArray.push(item.data.metadata.attributes[0]);
                   await toDataURL(item.data.image, function (dataUrl) {
@@ -205,11 +222,11 @@ export default function Admin() {
                 JSON.parse(
                   item.data.metadata
                 ).attributes[0].trait_type.toLowerCase() ===
-                  attributeType.trait_type.toLowerCase() &&
+                attributeType.trait_type.toLowerCase() &&
                 JSON.parse(
                   item.data.metadata
                 ).attributes[0].value.toLowerCase() ===
-                  attributeType.value.toLowerCase()
+                attributeType.value.toLowerCase()
               ) {
                 currentMetadataArray.push(
                   JSON.parse(item.data.metadata).attributes[0]
@@ -263,27 +280,6 @@ export default function Admin() {
       renderUpdatedImage(enraged ? "enraged" : "ttcc");
     }
   }, [userMetadata]);
-
-  const getNewMetadata = () => {
-    let currentImageArray = [];
-    let i = 0;
-
-    // console.log(userMetadata.metadata.attributes)
-
-    if (userMetadata.metadata.attributes[0].trait_type === "Iconic") {
-      currentImageArray.push(userMetadata.metadata.attributes[0]);
-      currentImageArray.push(userMetadata.metadata.attributes[1]);
-      currentImageArray.push({ trait_type: "Version", value: "Enraged" });
-    } else {
-      for (const attributeType of userMetadata.metadata.attributes) {
-        currentImageArray.push(attributeType);
-
-        i++;
-      }
-    }
-
-    return currentImageArray;
-  };
 
   const changeMetadata1 = async () => {
     alert.removeAll();
